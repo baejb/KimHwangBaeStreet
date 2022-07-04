@@ -20,3 +20,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('elastic/', include('elastic.urls')),
 ]
+
