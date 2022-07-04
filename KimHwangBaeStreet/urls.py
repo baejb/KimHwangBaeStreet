@@ -20,5 +20,4 @@ import main.views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', main.views.main),
 ]
