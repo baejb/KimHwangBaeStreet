@@ -9,4 +9,6 @@ urlpatterns = [
     path('store/', views.Store.as_view()), # 점포
     path('store/change/', views.StoreChange.as_view()), # 상권변화지표
     path('facilities/', views.Facilities.as_view()), # 집객시설
+    path('index/', views.index),
+    path('index/polygon/', views.polygon),
 ]
