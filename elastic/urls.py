@@ -11,4 +11,5 @@ urlpatterns = [
     path('facilities/', views.Facilities.as_view()), # 집객시설
     path('index/', views.index),
     path('index/polygon/', views.polygon),
+    path('index/polygon2/', views.polygon2),
 ]
