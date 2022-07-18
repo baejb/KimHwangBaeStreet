@@ -1,7 +1,9 @@
+from django.http import JsonResponse
 from django.shortcuts import render
 from elasticsearch import Elasticsearch
 from rest_framework.views import APIView
 from rest_framework.response import Response
+import json
 
 es = Elasticsearch(
     cloud_id='buyornot:YXAtbm9ydGhlYXN0LTIuYXdzLmVsYXN0aWMtY2xvdWQuY29tOjkyNDMkZDcyODFhN2RiYTVhNDQ5MjhlOTEzMjBlMzllZjUxNTMkYmUzZjA1NjgyZDU5NGNmZmJkNTYxNjM5OWNlN2FiNTc=',
@@ -15,15 +17,16 @@ class MapDetail(APIView):
         res = es.search(index='시군구위도경도')
 
         ans = []
+        dic = {'positions':[]}
         for i in res['hits']['hits']:
-            dic = {}
 
-            dic[i['_source']['SIG_KOR_NM']] = {'x': i['_source']['x'], 'y': i['_source']['y']}
-            ans.append(dic)
+            dic['positions'].append({'lat': i['_source']['y'], 'lng':i['_source']['x'], 'gu':i['_source']['SIG_KOR_NM']})
+            # dic[i['_source']['SIG_KOR_NM']] = {'x': i['_source']['x'], 'y': i['_source']['y']}
+            # ans.append(dic)
 
         # print(res['hits']['hits'])
 
-        return Response(ans)
+        return Response(dic)
 
 class FindByGu(APIView):
     def get(self, request, format=None):
@@ -295,3 +298,14 @@ class Facilities(APIView):
             ans.append(i['_source'])
 
         return Response(ans)
+
+def index(request):
+    return render(request, 'elastic/index.html')
+
+def polygon(request):
+    f = open('C:\django_workspace\KimHwangBaeStreet\elastic\polygon.geojson', encoding='utf-8')
+    f2 = open('C:\django_workspace\KimHwangBaeStreet\elastic\polygon2.geojson', encoding='utf-8')
+    context = json.load(f),
+    f.close()
+    # print(context)
+    return JsonResponse(context)
