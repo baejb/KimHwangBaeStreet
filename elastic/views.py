@@ -14,7 +14,7 @@ class MapDetail(APIView):
     def get(self, request, format=None):
         global es
 
-        res = es.search(index='시군구위도경도')
+        res = es.search(index='시군구위도경도', size=1000)
 
         ans = []
         dic = {'positions':[]}
