@@ -304,8 +304,14 @@ def index(request):
 
 def polygon(request):
     f = open('C:\django_workspace\KimHwangBaeStreet\elastic\polygon.geojson', encoding='utf-8')
-    f2 = open('C:\django_workspace\KimHwangBaeStreet\elastic\polygon2.geojson', encoding='utf-8')
-    context = json.load(f),
+    context = json.load(f)
+    f.close()
+    # print(context)
+    return JsonResponse(context)
+
+def polygon2(request):
+    f = open('C:\django_workspace\KimHwangBaeStreet\elastic\polygon2.geojson', encoding='utf-8')
+    context = json.load(f)
     f.close()
     # print(context)
     return JsonResponse(context)
