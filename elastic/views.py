@@ -10,6 +10,7 @@ es = Elasticsearch(
     basic_auth=('elastic', 'Orf5PC90BVmMMuVU5cKoTyrs'),
 )
 
+
 class MapDetail(APIView):
     def get(self, request, format=None):
         global es
@@ -17,16 +18,23 @@ class MapDetail(APIView):
         res = es.search(index='시군구위도경도', size=1000)
 
         ans = []
-        dic = {'positions':[]}
+        dic = {'positions': []}
         for i in res['hits']['hits']:
-
-            dic['positions'].append({'lat': i['_source']['y'], 'lng':i['_source']['x'], 'gu':i['_source']['SIG_KOR_NM']})
+            cnt = es.search(index='상권영역', query={
+                "match": {
+                    "시군구_코드": i['_source']['SIG_CD']
+                }
+            }, track_total_hits=True)
+            dic['positions'].append(
+                {'lat': i['_source']['y'], 'lng': i['_source']['x'], 'gu': i['_source']['SIG_KOR_NM'],
+                 'cnt': cnt['hits']['total']['value']})
             # dic[i['_source']['SIG_KOR_NM']] = {'x': i['_source']['x'], 'y': i['_source']['y']}
             # ans.append(dic)
 
         # print(res['hits']['hits'])
 
         return Response(dic)
+
 
 class FindByGu(APIView):
     def get(self, request, format=None):
@@ -51,6 +59,7 @@ class FindByGu(APIView):
         for i in res['hits']['hits']:
             ans.append(i['_source'])
         return Response(ans)
+
 
 class Population(APIView):
     def get(self, request, format=None):
@@ -77,7 +86,7 @@ class Population(APIView):
                     }
                 ]
             }
-        }, size=21)
+        }, size=1000)
         # print(res)
         ans['상권-생활인구'] = res['hits']['hits'][0]['_source']
 
@@ -101,7 +110,7 @@ class Population(APIView):
                     }
                 ]
             }
-        }, size=21)
+        }, size=1000)
 
         ans['상권-상주인구'] = res['hits']['hits'][0]['_source']
 
@@ -125,7 +134,7 @@ class Population(APIView):
                     }
                 ]
             }
-        }, size=21)
+        }, size=1000)
 
         ans['상권-직장인구'] = res['hits']['hits'][0]['_source']
 
@@ -149,7 +158,7 @@ class Population(APIView):
                     }
                 ]
             }
-        }, size=21)
+        }, size=1000)
         # print(res)
         ans['상권배후지-생활인구'] = res['hits']['hits'][0]['_source']
 
@@ -173,7 +182,7 @@ class Population(APIView):
                     }
                 ]
             }
-        }, size=21)
+        }, size=1000)
 
         ans['상권배후지-상주인구'] = res['hits']['hits'][0]['_source']
 
@@ -197,64 +206,105 @@ class Population(APIView):
                     }
                 ]
             }
-        }, size=21)
+        }, size=1000)
 
         ans['상권배후지-직장인구'] = res['hits']['hits'][0]['_source']
 
         return Response(ans)
+
 
 class Sales(APIView):
     def get(self, request, format=None):
         global es
         cCode = request.GET['cCode']
         serviceCode = request.GET['serviceCode']
-        res = es.search(index='상권-추정매출', query={
-            "bool": {
-                "must": [
-                    {
-                        "match": {
-                            "상권_코드_명": cCode
+        if serviceCode == 'all':
+            allList = ['분식전문점', '한식음식점', '일식음식점', '치킨전문점', '중식음식점', '양식음식점', '제과점', '패스트푸드점', '호프-간이주점', '커피-음료']
+            res = es.search(index='상권-추정매출', query={
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "상권_코드_명": cCode
+                            }
+                        },
+                        {
+                            "terms": {
+                                "서비스_업종_코드_명": allList
+                            }
                         }
-                    },
-                    {
-                        "match": {
-                            "서비스_업종_코드_명": serviceCode
+                    ]
+                }
+            }, size=1000)
+        else:
+            res = es.search(index='상권-추정매출', query={
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "상권_코드_명": cCode
+                            }
+                        },
+                        {
+                            "match": {
+                                "서비스_업종_코드_명": serviceCode
+                            }
                         }
-                    }
-                ]
-            }
-        })
+                    ]
+                }
+            }, size=1000)
         ans = []
         for i in res['hits']['hits']:
             ans.append(i['_source'])
         return Response(ans)
+
 
 class Store(APIView):
     def get(self, request, format=None):
         global es
         cCode = request.GET['cCode']
         serviceCode = request.GET['serviceCode']
-        res = es.search(index='상권-점포', query={
-            "bool": {
-                "must": [
-                    {
-                        "match": {
-                            "상권_코드_명": cCode
+        if serviceCode == 'all':
+            allList = ['분식전문점', '한식음식점', '일식음식점', '치킨전문점', '중식음식점', '양식음식점', '제과점', '패스트푸드점', '호프-간이주점', '커피-음료']
+            res = es.search(index='상권-점포', query={
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "상권_코드_명": cCode
+                            }
+                        },
+                        {
+                            "terms": {
+                                "서비스_업종_코드_명": allList
+                            }
                         }
-                    },
-                    {
-                        "match": {
-                            "서비스_업종_코드_명": serviceCode
+                    ]
+                }
+            }, size=1000)
+        else:
+            res = es.search(index='상권-점포', query={
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "상권_코드_명": cCode
+                            }
+                        },
+                        {
+                            "match": {
+                                "서비스_업종_코드_명": serviceCode
+                            }
                         }
-                    }
-                ]
-            }
-        })
+                    ]
+                }
+            }, size=1000)
         ans = []
         for i in res['hits']['hits']:
             ans.append(i['_source'])
 
         return Response(ans)
+
 
 class StoreChange(APIView):
     def get(self, request, format=None):
@@ -270,7 +320,7 @@ class StoreChange(APIView):
                     }
                 ]
             }
-        })
+        }, size=1000)
         ans = []
         for i in res['hits']['hits']:
             ans.append(i['_source'])
@@ -292,15 +342,17 @@ class Facilities(APIView):
                     }
                 ]
             }
-        })
+        }, size=1000)
         ans = []
         for i in res['hits']['hits']:
             ans.append(i['_source'])
 
         return Response(ans)
 
+
 def index(request):
     return render(request, 'elastic/index.html')
+
 
 def polygon(request):
     f = open('C:\django_workspace\KimHwangBaeStreet\elastic\polygon.geojson', encoding='utf-8')
@@ -308,6 +360,7 @@ def polygon(request):
     f.close()
     # print(context)
     return JsonResponse(context)
+
 
 def polygon2(request):
     f = open('C:\django_workspace\KimHwangBaeStreet\elastic\polygon2.geojson', encoding='utf-8')
