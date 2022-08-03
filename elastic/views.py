@@ -10,6 +10,7 @@ es = Elasticsearch(
     basic_auth=('elastic', 'Orf5PC90BVmMMuVU5cKoTyrs'),
 )
 
+
 class MapDetail(APIView):
     def get(self, request, format=None):
         global es
@@ -17,16 +18,23 @@ class MapDetail(APIView):
         res = es.search(index='시군구위도경도', size=1000)
 
         ans = []
-        dic = {'positions':[]}
+        dic = {'positions': []}
         for i in res['hits']['hits']:
-
-            dic['positions'].append({'lat': i['_source']['y'], 'lng':i['_source']['x'], 'gu':i['_source']['SIG_KOR_NM']})
+            cnt = es.search(index='상권영역', query={
+                "match": {
+                    "시군구_코드": i['_source']['SIG_CD']
+                }
+            }, track_total_hits=True)
+            dic['positions'].append(
+                {'lat': i['_source']['y'], 'lng': i['_source']['x'], 'gu': i['_source']['SIG_KOR_NM'],
+                 'cnt': cnt['hits']['total']['value']})
             # dic[i['_source']['SIG_KOR_NM']] = {'x': i['_source']['x'], 'y': i['_source']['y']}
             # ans.append(dic)
 
         # print(res['hits']['hits'])
 
         return Response(dic)
+
 
 class FindByGu(APIView):
     def get(self, request, format=None):
@@ -51,6 +59,7 @@ class FindByGu(APIView):
         for i in res['hits']['hits']:
             ans.append(i['_source'])
         return Response(ans)
+
 
 class Population(APIView):
     def get(self, request, format=None):
@@ -203,6 +212,7 @@ class Population(APIView):
 
         return Response(ans)
 
+
 class Sales(APIView):
     def get(self, request, format=None):
         global es
@@ -247,6 +257,7 @@ class Sales(APIView):
         for i in res['hits']['hits']:
             ans.append(i['_source'])
         return Response(ans)
+
 
 class Store(APIView):
     def get(self, request, format=None):
@@ -294,6 +305,7 @@ class Store(APIView):
 
         return Response(ans)
 
+
 class StoreChange(APIView):
     def get(self, request, format=None):
         global es
@@ -337,8 +349,10 @@ class Facilities(APIView):
 
         return Response(ans)
 
+
 def index(request):
     return render(request, 'elastic/index.html')
+
 
 def polygon(request):
     f = open('C:\django_workspace\KimHwangBaeStreet\elastic\polygon.geojson', encoding='utf-8')
@@ -346,6 +360,7 @@ def polygon(request):
     f.close()
     # print(context)
     return JsonResponse(context)
+
 
 def polygon2(request):
     f = open('C:\django_workspace\KimHwangBaeStreet\elastic\polygon2.geojson', encoding='utf-8')
