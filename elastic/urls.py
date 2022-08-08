@@ -12,4 +12,5 @@ urlpatterns = [
     path('index/', views.index),
     path('index/polygon/', views.polygon),
     path('index/polygon2/', views.polygon2),
+    path('', views.main), # 메인 페이지
 ]
