@@ -41,24 +41,19 @@ class FindByGu(APIView):
         global es
         guName = request.GET['guName']
         res = es.search(index='시군구위도경도', query={
-            'match': {
+            'prefix': {
                 'SIG_KOR_NM': guName
             }
         }, size=21)
         # print(res)
+        dic = {'positions': {}}
+        i = res['hits']['hits'][0]
 
-        guCode = res['hits']['hits'][0]['_source']['SIG_CD']
+        dic['positions'] = {'lat': i['_source']['y'], 'lng': i['_source']['x'], 'gu': i['_source']['SIG_KOR_NM']}
 
-        res = es.search(index='상권영역', query={
-            'match': {
-                '시군구_코드': guCode
-            }
-        }, size=1000)
-        # print(res['hits']['hits'])
-        ans = []
-        for i in res['hits']['hits']:
-            ans.append(i['_source'])
-        return Response(ans)
+
+
+        return Response(dic)
 
 
 class Population(APIView):
