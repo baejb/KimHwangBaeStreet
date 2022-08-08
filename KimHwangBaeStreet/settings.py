@@ -128,5 +128,5 @@ CORS_ORIGIN_REGEX_WHITELIST = ['http://127.0.0.1:5500' ,'http://localhost:5500']
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'elastic/static'),
 )
