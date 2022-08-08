@@ -368,3 +368,7 @@ def polygon2(request):
     f.close()
     # print(context)
     return JsonResponse(context)
+
+
+def main(request):
+    return render(request, 'elastic/main.html')
