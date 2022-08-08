@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{% static 'elastic/css/style.css' %}">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
 </head>
 <body>
 
@@ -24,8 +25,8 @@
             </div>
         </div>
 
-    <div class="selectedArea">
-        <p>선택된 지역 : </p>
+    <div id="selectedArea">
+        <span>선택된 지역 : </span>
     </div>
     <section class="service">
         <button class="servicecode" value="한식음식점">한식음식점</button>
@@ -40,6 +41,9 @@
     </section>
     <div class="report">
         <button id="report">분석하기</button>
+    </div>
+    <div class="reload">
+        <button id="reload" >새로고침</button>
     </div>
 </div>
 </div>
@@ -56,10 +60,16 @@
              // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
              //클릭 이벤트가 발생했을 때 그 당시의 위도 경도를 파라미터로 넘겨받아서 그때 그때 만들어주는것 ...!
             moveLatLon= new kakao.maps.LatLng(lat, lng)
+            /* map.panTo(moveLatLon); */
+            // 지도 레벨을 4로 설정하고 특정 좌표를 기준으로 확대 또는 축소되도록 한다
+            map.setLevel(4, {anchor: new kakao.maps.LatLng(lat, lng)});
             map.panTo(moveLatLon);
-
-
     }
+function showgu(gu){
+    document.getElementById('selectedArea').innerHTML+= gu;
+
+
+}
 
 
     var map = new kakao.maps.Map(document.getElementById('map'), { // 지도를 표시할 div
@@ -77,6 +87,12 @@
      });
     });
 
+    $('.reload').on("click",function(){
+        location.reload();
+    })
+
+
+
 // 커스텀 오버레이에 표시할 내용입니다
 // HTML 문자열 또는 Dom Element 입니다
 
@@ -85,6 +101,28 @@ let gulat= new Array() ;
 let gulng= new Array() ;
 let moveLatLon= new Array() ;
 var position; //// 커스텀 오버레이가 표시될 위치입니다
+
+
+/* var clusterer = new kakao.maps.MarkerClusterer({
+        map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체
+        averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
+        minLevel: 8, // 클러스터 할 최소 지도 레벨
+        disableClickZoom: true // 클러스터 마커를 클릭했을 때 지도가 확대되지 않도록 설정한다
+    }); */
+/* $.get("http://127.0.0.1:8000/elastic/map/", function(data) {
+        // 데이터에서 좌표 값을 가지고 마커를 표시합니다
+        // 마커 클러스터러로 관리할 마커 객체는 생성할 때 지도 객체를 설정하지 않습니다
+        console.log(data);
+        var markers = $(data.positions).map(function(i, position) {
+            return new kakao.maps.Marker({
+                position : new kakao.maps.LatLng(position.lat, position.lng)
+
+            });
+        });
+
+        // 클러스터러에 마커들을 추가합니다
+        clusterer.addMarkers(markers);
+    }); */
 
 $.getJSON('http://127.0.0.1:8000/map/', function(data){
 
@@ -125,7 +163,7 @@ $.getJSON('http://127.0.0.1:8000/map/', function(data){
         var customOverlay = new kakao.maps.CustomOverlay({
         position: position,
        /*  content : '<div class ="label"><span class="left"></span><span class="center">'+item.gu+ item.cnt+'</span><span class="right"></span></div>' , */
-        content : '<div class="circle" onclick="panTo('+item.lat+','+item.lng+')" title="클릭"><span class ="circlegu">'+item.gu+ '</span><div class="circlecnt">'+item.cnt+'</div></div>'
+        content : '<div class="circle" onclick="panTo('+item.lat+','+item.lng+'); showgu(\'' + item.gu + '\')" title="클릭"><span class ="circlegu">'+item.gu+ '</span><div class="circlecnt">'+item.cnt+'</div></div>'
         //함수를 실행할 때 현재 위도 경도를 넘겨줌
         });
 

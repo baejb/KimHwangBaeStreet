@@ -353,9 +353,11 @@ class Facilities(APIView):
 def index(request):
     return render(request, 'elastic/index.html')
 
+def main(request):
+    return render(request, 'elastic/main.html')
 
 def polygon(request):
-    f = open('C:\django_workspace\KimHwangBaeStreet\elastic\polygon.geojson', encoding='utf-8')
+    f = open('elastic\polygon.geojson', encoding='utf-8')
     context = json.load(f)
     f.close()
     # print(context)
@@ -363,12 +365,9 @@ def polygon(request):
 
 
 def polygon2(request):
-    f = open('C:\django_workspace\KimHwangBaeStreet\elastic\polygon2.geojson', encoding='utf-8')
+    f = open('elastic\polygon2.geojson', encoding='utf-8')
     context = json.load(f)
     f.close()
     # print(context)
     return JsonResponse(context)
 
-
-def main(request):
-    return render(request, 'elastic/main.html')
