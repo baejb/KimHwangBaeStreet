@@ -27,6 +27,12 @@
     <div id="selectedArea">
         <span>선택된 지역 : </span>
     </div>
+        <div id="commercialArea">
+            <span>선택된 상권 :</span>
+        </div>
+        <div id="commercialAreaName">
+            <span>선택된 상권이름 :</span>
+        </div>
     <section class="service">
         <button class="servicecode" value="한식음식점">한식음식점</button>
         <button class="servicecode" value="일식음식점">일식음식점</button>
@@ -73,6 +79,15 @@ function showgu(gu){
     Guname.innerHTML +=gu ;
     DrawPolygon();
     DrawPolygon2();
+}
+function showCommercialArea(CommercialArea){
+    let sg = document.getElementById('commercialArea');
+    sg.innerHTML +=CommercialArea ;
+
+}
+function showCommercialAreaName(CommercialAreaName){
+    let sgName = document.getElementById('commercialAreaName');
+    sgName.innerHTML +=CommercialAreaName ;
 }
 
 
@@ -161,8 +176,6 @@ $.getJSON('http://127.0.0.1:8000/map/', function(data){
 
 
 <script>
-        {#DrawPolygon();#}
-        {#DrawPolygon2();#}
 
 
 // 다각형을 구성하는 좌표 배열입니다. 이 좌표들을 이어서 다각형을 표시합니다
@@ -172,15 +185,18 @@ $.getJSON('http://127.0.0.1:8000/map/', function(data){
                 var data = geojson.features;
                 var name = '';
                 var code = '';
+                var sgname= '' ;
                 var coordinates = [];
                 // console.log(data);
 
                 $.each(data, function (index, val) {
                     name = val.properties.TRDAR_NM;
                     code = val.properties.TRDAR_NO;
+                    sgname = val.properties.TRDAR_SE_1; //상권 이름
                     coordinates = val.geometry.coordinates;
                     // console.log(coordinates);
-                    displayArea1(name, code, coordinates, false);
+                    displayArea1(name, code, coordinates, sgname);
+
                 });
             });
         }
@@ -190,20 +206,25 @@ $.getJSON('http://127.0.0.1:8000/map/', function(data){
                 var data = geojson.features;
                 var name = '';
                 var code = '';
+                var sgname= '' ;
                 var coordinates = [];
                 // console.log(data);
 
                 $.each(data, function (index, val) {
                     name = val.properties.TRDAR_NM;
                     code = val.properties.TRDAR_NO;
+                    sgname = val.properties.TRDAR_SE_1; //상권 이름
                     coordinates = val.geometry.coordinates;
                     // console.log(coordinates);
-                    displayArea2(name, code, coordinates, false);
+                    displayArea2(name, code, coordinates, sgname);
+                    {#showAreaInfo(name,sang);#}
+
+            })
                 });
-            });
+
         }
 
-        function displayArea1(name, code, coordinates) {
+        function displayArea1(name, code, coordinates ,sgname) {
             var polygonPath = [];
             $.each(coordinates[0], function (index, coordinate) {
                     polygonPath.push(new kakao.maps.LatLng(coordinate[1], coordinate[0]));
@@ -219,10 +240,25 @@ $.getJSON('http://127.0.0.1:8000/map/', function(data){
                 fillColor: '#A2FF99', // 채우기 색깔입니다
                 fillOpacity: 0.7 // 채우기 불투명도 입니다
             });
+            kakao.maps.event.addListener(polygon, 'mouseover', function(mouseEvent) { //마우스 올려놨을 때 색 변하게
+             polygon.setOptions({fillColor: '#e3606c'});
+            polygon.setOptions({strokeColor: '#ea2121'});
+            });
+             kakao.maps.event.addListener(polygon, 'mouseout', function() { // 다각형에 mouseout 이벤트를 등록하고 이벤트가 발생하면 폴리곤의 채움색을 원래색으로 변경합니다
+                 polygon.setOptions({fillColor: '#A2FF99'});
+                 polygon.setOptions({strokeColor: '#39DE2A'});
+
+            });
+              kakao.maps.event.addListener(polygon, 'mousedown', function() {
+                  showCommercialArea(sgname);
+                  showCommercialAreaName(name);
+
+              });
             polygon.setMap(map);
         }
 
-        function displayArea2(name, code, coordinates) {
+
+        function displayArea2(name, code, coordinates ,sgname) {
             var polygonPath = [];
             $.each(coordinates[0], function (index, coordinate) {
                     polygonPath.push(new kakao.maps.LatLng(coordinate[1], coordinate[0]));
@@ -238,6 +274,22 @@ $.getJSON('http://127.0.0.1:8000/map/', function(data){
                 fillColor: '#52c2fa', // 채우기 색깔입니다
                 fillOpacity: 0.7 // 채우기 불투명도 입니다
             });
+             kakao.maps.event.addListener(polygon, 'mouseover', function(mouseEvent) { //마우스 올려놨을 때 색 변하게
+             polygon.setOptions({fillColor: '#e3606c'});
+             polygon.setOptions({strokeColor: '#ea2121'});
+
+            });
+             kakao.maps.event.addListener(polygon, 'mouseout', function() { // 다각형에 mouseout 이벤트를 등록하고 이벤트가 발생하면 폴리곤의 채움색을 원래색으로 변경합니다
+                 polygon.setOptions({fillColor: '#52c2fa'});
+                 polygon.setOptions({strokeColor: '#1400f5'});
+
+    });
+             kakao.maps.event.addListener(polygon, 'mousedown', function() {
+                  showCommercialArea(sgname);
+                  showCommercialAreaName(name);
+
+
+              });
             polygon.setMap(map);
         }
 
