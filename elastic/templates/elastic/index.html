@@ -26,12 +26,15 @@
 
     <div id="selectedArea">
         <span>선택된 지역 : </span>
+        <span id="selectArea"></span> <!--이 곳에 선택한 지역  -->
     </div>
         <div id="commercialArea">
             <span>선택된 상권 :</span>
+            <span id="cA1"></span> <!--이 곳에 선택된 상권   -->
         </div>
         <div id="commercialAreaName">
             <span>선택된 상권이름 :</span>
+            <span id="cA2"></span> <!--이 곳에 선택된 상권이름  -->
         </div>
     <section class="service">
         <button class="servicecode" value="한식음식점">한식음식점</button>
@@ -59,7 +62,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <script>
-
+var flag = 1 // 플래그 설정으로 한번만 실행되게
  function panTo(lat,lng) {
             // 이동할 위도 경도 위치를 생성합니다
 
@@ -75,19 +78,23 @@
 
     }
 function showgu(gu){
-    let Guname = document.getElementById('selectedArea');
-    Guname.innerHTML +=gu ;
-    DrawPolygon();
-    DrawPolygon2();
+
+    let Guname = document.getElementById('selectArea');
+
+        Guname.innerHTML = gu;
+        DrawPolygon();
+        DrawPolygon2();
+
+
 }
 function showCommercialArea(CommercialArea){
-    let sg = document.getElementById('commercialArea');
-    sg.innerHTML +=CommercialArea ;
+    let sg = document.getElementById('cA1');
+    sg.innerHTML =CommercialArea ;
 
 }
 function showCommercialAreaName(CommercialAreaName){
-    let sgName = document.getElementById('commercialAreaName');
-    sgName.innerHTML +=CommercialAreaName ;
+    let sgName = document.getElementById('cA2');
+    sgName.innerHTML =CommercialAreaName ;
 }
 
 
