@@ -15,13 +15,14 @@
     }
     .map_wrap{
         font-size:20px;
-        position:absolute;
+        position: absolute;
         left: 9px;
         width: 20%;
         height: 70%;
         z-index: 2;
         background-color: #93C6D5E5;
     }
+
     #menu_wrap{
         display: flex;
         flex-direction: column;
@@ -49,7 +50,8 @@
     background-color: white;
     color: black;
     }
-    #report{
+
+    .clickreport{
         background-color: rgba(205, 226, 235, 1);
         border-style: none;
         width: 50%;
@@ -58,6 +60,8 @@
 
 
     }
+
+
  /*    .label {margin-bottom: 96px;}
     .label * {display: inline-block;vertical-align: top;} */
 /* .label .left {background: url("https://t1.daumcdn.net/localimg/localimages/07/2011/map/storeview/tip_l.png") no-repeat;display: inline-block;height: 24px;overflow: hidden;vertical-align: top;width: 7px;}
@@ -82,4 +86,22 @@
     background-color: white;
     text-align: center;
 
+}
+
+
+.ResultReport{
+    position :absolute ;
+    top: 11%;
+    left: 60%;
+    font-size:30px;
+    width: 80%;
+    height: 90%;
+    z-index: 2;
+    background-color: #fde288;
+}
+.ResultReportNone{
+    display:none;
+}
+.ReportHead{
+    font-size:20px;
 }
