@@ -47,22 +47,49 @@
         <button class="servicecode" value="호프/간이주점">호프/간이주점</button>
         <button class="servicecode" value="커피/음료">커피/음료</button>
     </section>
-    <div class="report">
-        <button id="report">분석하기</button>
+    <div class="clickreport">
+        <button onclick="clickReport(); showReportHead()" id="report">분석하기</button>
     </div>
         <div class="reload">
         <button id="reload" >새로고침</button>
     </div>
 </div>
 </div>
+
+
 <div id="map" style="width:100%;height:700px;"></div>
 <!-- position:relative;overflow:hidden; -->
+<div class="ResultReport" style="display: none" >
+   <!--분석 리포트 띄우는 창 !  -->
+    <div class="ReportHead">
+        <sapn>위치:</sapn>
+        <span id="reportHeadGuname"></span>
+        <br>
+        <span>상권:</span>
+        <span id="reportHeadsg"></span>
+        <br>
+        <span>상권이름:</span>
+        <span id="reportHeadsgName"></span>
+        <span>의 분석 결과입니다. </span>
+        <hr>
+    </div>
+    <div id="ResultReport0">분석 리포트 입니다  </div>
+</div>
+
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a9792b3125b1c069b26e0cd44dd8c3ed&libraries=clusterer"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <script>
-var flag = 1 // 플래그 설정으로 한번만 실행되게
+    //분석 리포트 띄우기
+function clickReport(){
+    if($('.ResultReport').css('display')== 'none'){
+        $('.ResultReport').show();
+    }else{
+        $('.ResultReport').hide();
+    }
+}
+
  function panTo(lat,lng) {
             // 이동할 위도 경도 위치를 생성합니다
 
@@ -77,10 +104,21 @@ var flag = 1 // 플래그 설정으로 한번만 실행되게
 
 
     }
+let reportGuname;
+let reportsg;
+let reportsgName;
+function showReportHead(){
+    let Guname = document.getElementById('reportHeadGuname');
+    Guname.innerHTML = reportGuname;
+    let sg = document.getElementById('reportHeadsg');
+    sg.innerHTML = reportsg;
+    let sgName = document.getElementById('reportHeadsgName');
+    sgName.innerHTMl = reportsgName;
+}
 function showgu(gu){
 
     let Guname = document.getElementById('selectArea');
-
+        reportGuname = gu;
         Guname.innerHTML = gu;
         DrawPolygon();
         DrawPolygon2();
@@ -90,11 +128,13 @@ function showgu(gu){
 function showCommercialArea(CommercialArea){
     let sg = document.getElementById('cA1');
     sg.innerHTML =CommercialArea ;
-
+    reportsg=CommercialArea;
 }
 function showCommercialAreaName(CommercialAreaName){
+    reportsgName = CommercialAreaName;
     let sgName = document.getElementById('cA2');
     sgName.innerHTML =CommercialAreaName ;
+
 }
 
 
