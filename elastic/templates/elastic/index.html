@@ -112,8 +112,8 @@ function showReportHead(){
     Guname.innerHTML = reportGuname;
     let sg = document.getElementById('reportHeadsg');
     sg.innerHTML = reportsg;
-    let sgName = document.getElementById('reportHeadsgName');
-    sgName.innerHTMl = reportsgName;
+    let sgname = document.getElementById('reportHeadsgName');
+    sgname.innerHTML = reportsgName;
 }
 function showgu(gu){
 
@@ -264,7 +264,7 @@ $.getJSON('http://127.0.0.1:8000/map/', function(data){
                     coordinates = val.geometry.coordinates;
                     // console.log(coordinates);
                     displayArea2(name, code, coordinates, sgname);
-                    {#showAreaInfo(name,sang);#}
+
 
             })
                 });
