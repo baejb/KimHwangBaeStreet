@@ -72,16 +72,29 @@
         <span id="reportHeadsgName"></span>
         <span>의 분석 결과입니다. </span>
         <hr>
+        <div id="resultpopulation"></div>
     </div>
     <div id="ResultReport0">분석 리포트 입니다  </div>
+    <canvas id="myChart" width="height:30vh; width:50vw"></canvas>
+    <canvas id="myChart1" width="height:30vh; width:50vw"></canvas>
+
 </div>
 
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a9792b3125b1c069b26e0cd44dd8c3ed&libraries=clusterer"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 <script>
+
     //분석 리포트 띄우기
+fetch('http://127.0.0.1:8000/population/?cCode=선일여고')
+  .then(res => res.json())
+  .then(res => {
+      console.log(res["상권-생활인구"]);
+      document.getElementById("resultpopulation").innerHTML = res["상권-생활인구"]["금요일_생활인구_수"];
+
+    //cconsole.log(`${res.상권-생활인구[0]}`);// data를 응답 받은 후의 로직
+  });
 function clickReport(){
     if($('.ResultReport').css('display')== 'none'){
         $('.ResultReport').show();
@@ -339,9 +352,129 @@ $.getJSON('http://127.0.0.1:8000/map/', function(data){
               });
             polygon.setMap(map);
         }
-
+let Data;
 // 지도에 다각형을 표시합니다
 
+
+{#var chartArea = document.getElementById('myChart').getContext('2d');#}
+{#// 차트를 생성한다.#}
+{#var myChart = new Chart(chartArea, {#}
+{#    // ①차트의 종류(String)#}
+{#    type: 'bar',#}
+{#    // ②차트의 데이터(Object)#}
+{#    data: {#}
+{#        // ③x축에 들어갈 이름들(Array)#}
+{#        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],#}
+{#        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.#}
+{#        datasets: [{#}
+{#            // ⑤dataset의 이름(String)#}
+{#            label: '# of Votes',#}
+{#            // ⑥dataset값(Array)#}
+{#            data: [12, 19, 3, 5, 2, 3],#}
+{#            // ⑦dataset의 배경색(rgba값을 String으로 표현)#}
+{#            backgroundColor: 'rgba(255, 99, 132, 0.2)',#}
+{#            // ⑧dataset의 선 색(rgba값을 String으로 표현)#}
+{#            borderColor: 'rgba(255, 99, 132, 1)',#}
+{#            // ⑨dataset의 선 두께(Number)#}
+{#            borderWidth: 1#}
+{#        }]#}
+{#    },#}
+{#    // ⑩차트의 설정(Object)#}
+{#    options: {#}
+{#        responsive: false,#}
+{#        // ⑪축에 관한 설정(Object)#}
+{#        scales: {#}
+{#            // ⑫y축에 대한 설정(Object)#}
+{#            y: {#}
+{#                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)#}
+{#                beginAtZero: true#}
+{#            }#}
+{#        }#}
+{#    }#}
+{# });#}
+// url = https://gillog/post/1?tag=javascript&like=backend
+const urlParameter = window.location.search; // 현재 url 가져옴
+
+// ?tag=javascript&like=backend
+console.log(urlParameter);
+fetch('http://127.0.0.1:8000/test/?cCode=%EA%B5%AC%EC%9D%98%EC%82%AC%EA%B1%B0%EB%A6%AC&serviceCode=%EB%B6%84%EC%8B%9D%EC%A0%84%EB%AC%B8%EC%A0%90')
+  .then(res => res.json())
+  .then(res => {
+//막대 그래프
+var chartArea = document.getElementById('myChart').getContext('2d');
+// 차트를 생성한다.
+var myChart = new Chart(chartArea, {
+    // ①차트의 종류(String)
+    type: 'bar',
+    // ②차트의 데이터(Object)
+    data: {
+        // ③x축에 들어갈 이름들(Array)
+        labels: res["점포수"].label,
+        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.
+        datasets: [{
+            // ⑤dataset의 이름(String)
+            label: '# of Votes',
+            // ⑥dataset값(Array)
+            data: res["점포수"].data,
+            // ⑦dataset의 배경색(rgba값을 String으로 표현)
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            // ⑧dataset의 선 색(rgba값을 String으로 표현)
+            borderColor: 'rgba(255, 99, 132, 1)',
+            // ⑨dataset의 선 두께(Number)
+            borderWidth: 1
+        }]
+    },
+    // ⑩차트의 설정(Object)
+    options: {
+        responsive: false,
+        // ⑪축에 관한 설정(Object)
+        scales: {
+            // ⑫y축에 대한 설정(Object)
+            y: {
+                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)
+                beginAtZero: true
+            }
+        }
+    }
+});
+//파이차트
+var chartArea1 = document.getElementById('myChart1').getContext('2d');
+var myChart1 = new Chart(chartArea1, {
+    // ①차트의 종류(String)
+    type: 'pie',
+    // ②차트의 데이터(Object)
+    data: {
+        // ③x축에 들어갈 이름들(Array)
+        labels: res["일반/프랜차이즈"].label,
+        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.
+        datasets: [{
+            // ⑤dataset의 이름(String)
+            label: '일반/프랜차이즈',
+            // ⑥dataset값(Array)
+            data: res["일반/프랜차이즈"].data,
+            // ⑦dataset의 배경색(rgba값을 String으로 표현)
+             backgroundColor: ['#28c3d7', '#FF6384'],
+
+            // ⑧dataset의 선 색(rgba값을 String으로 표현)
+            borderColor: 'rgb(234,33,33)',
+            // ⑨dataset의 선 두께(Number)
+            borderWidth: 1
+        }]
+    },
+    // ⑩차트의 설정(Object)
+    options: {
+        responsive: false,
+        // ⑪축에 관한 설정(Object)
+        scales: {
+            // ⑫y축에 대한 설정(Object)
+            y: {
+                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)
+                beginAtZero: true
+            }
+        }
+    }
+});
+});
 </script>
 </body>
 </html>
