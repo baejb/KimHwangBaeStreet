@@ -3,7 +3,7 @@ from . import views
 
 urlpatterns = [
     path('map/', views.MapDetail.as_view()), # 시군구위도경도
-    path('test/', views.GraphTest.as_view()), # 그래프
+    path('test/', views.GraphJSON.as_view()), # 그래프
     path('gu/key/', views.FindByGu_key.as_view()), # 시군구명으로 상권영역
     path('gu/enter/', views.FindByGu_enter.as_view()), # 시군구명으로 상권영역
     path('population/',  views.Population.as_view()), # 인구
