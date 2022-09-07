@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>김황배의 골목식당</title>
+{#    <link href="css/style.css" rel="stylesheet">#}
+    <link rel="stylesheet" href="{% static 'elastic/css/style.css' %}">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+</head>
+<body>
+<h1>김황배의 골목식당</h1>
+<div class="map_wrap" >
+    <!-- <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div> -->
+    <div id="menu_wrap" class="bg_white">
+        <div class="search">
+            <div>
+                <form action="" method="get">
+                    지역 <input type="search" name="guName">
+                    <input type="submit" value="검색">
+                </form>
+            </div>
+        </div>
+
+    <div id="selectedArea">
+        <span>선택된 지역 : </span>
+        <span id="selectArea"></span> <!--이 곳에 선택한 지역  -->
+    </div>
+        <div id="commercialArea">
+            <span>선택된 상권 :</span>
+            <span id="cA1"></span> <!--이 곳에 선택된 상권   -->
+        </div>
+        <div id="commercialAreaName">
+            <span>선택된 상권이름 :</span>
+            <span id="cA2"></span> <!--이 곳에 선택된 상권이름  -->
+        </div>
+    <section class="service">
+        <button class="servicecode" value="한식음식점">한식음식점</button>
+        <button class="servicecode" value="일식음식점">일식음식점</button>
+        <button class="servicecode" value="중식음식점">중식음식점</button>
+        <button class="servicecode" value="제과점">제과점</button>
+        <button class="servicecode" value="패스트푸드점">패스트푸드점</button>
+        <button class="servicecode" value="치킨전문점">치킨전문점</button>
+        <button class="servicecode" value="분식전문점">분식전문점</button>
+        <button class="servicecode" value="호프/간이주점">호프/간이주점</button>
+        <button class="servicecode" value="커피/음료">커피/음료</button>
+    </section>
+    <div class="clickreport">
+        <button onclick="clickReport(); showReportHead()" id="report">분석하기</button>
+    </div>
+        <div class="reload">
+        <button id="reload" >새로고침</button>
+    </div>
+</div>
+</div>
+
+
+<div id="map" style="width:100%;height:700px;"></div>
+<!-- position:relative;overflow:hidden; -->
+<div class="ResultReport" style="display: none" >
+   <!--분석 리포트 띄우는 창 !  -->
+    <div class="ReportHead">
+        <sapn>위치:</sapn>
+        <span id="reportHeadGuname"></span>
+        <br>
+        <span>상권:</span>
+        <span id="reportHeadsg"></span>
+        <br>
+        <span>상권이름:</span>
+        <span id="reportHeadsgName"></span>
+        <span>의 분석 결과입니다. </span>
+        <hr>
+        <div id="resultpopulation"></div>
+    </div>
+    <div id="ResultReport0">분석 리포트 입니다  </div>
+    <canvas id="myChart" width="height:30vh; width:50vw"></canvas>
+    <canvas id="myChart1" width="height:30vh; width:50vw"></canvas>
+
+</div>
+
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a9792b3125b1c069b26e0cd44dd8c3ed&libraries=clusterer"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+<script>
+
+    //분석 리포트 띄우기
+fetch('http://127.0.0.1:8000/population/?cCode=선일여고')
+  .then(res => res.json())
+  .then(res => {
+      console.log(res["상권-생활인구"]);
+      document.getElementById("resultpopulation").innerHTML = res["상권-생활인구"]["금요일_생활인구_수"];
+
+    //cconsole.log(`${res.상권-생활인구[0]}`);// data를 응답 받은 후의 로직
+  });
+function clickReport(){
+    if($('.ResultReport').css('display')== 'none'){
+        $('.ResultReport').show();
+    }else{
+        $('.ResultReport').hide();
+    }
+}
+
+ function panTo(lat,lng) {
+            // 이동할 위도 경도 위치를 생성합니다
+
+             // 지도 중심을 부드럽게 이동시킵니다
+             // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
+             //클릭 이벤트가 발생했을 때 그 당시의 위도 경도를 파라미터로 넘겨받아서 그때 그때 만들어주는것 ...!
+            moveLatLon= new kakao.maps.LatLng(lat, lng)
+            // 지도 레벨을 4로 설정하고 특정 좌표를 기준으로 확대 또는 축소되도록 한다
+            map.setLevel(5, {anchor: new kakao.maps.LatLng(lat, lng)});
+            map.panTo(moveLatLon);
+
+
+
+    }
+let reportGuname;
+let reportsg;
+let reportsgName;
+function showReportHead(){
+    let Guname = document.getElementById('reportHeadGuname');
+    Guname.innerHTML = reportGuname;
+    let sg = document.getElementById('reportHeadsg');
+    sg.innerHTML = reportsg;
+    let sgname = document.getElementById('reportHeadsgName');
+    sgname.innerHTML = reportsgName;
+}
+function showgu(gu){
+
+    let Guname = document.getElementById('selectArea');
+        reportGuname = gu;
+        Guname.innerHTML = gu;
+        DrawPolygon();
+        DrawPolygon2();
+
+
+}
+function showCommercialArea(CommercialArea){
+    let sg = document.getElementById('cA1');
+    sg.innerHTML =CommercialArea ;
+    reportsg=CommercialArea;
+}
+function showCommercialAreaName(CommercialAreaName){
+    reportsgName = CommercialAreaName;
+    let sgName = document.getElementById('cA2');
+    sgName.innerHTML =CommercialAreaName ;
+
+}
+
+
+    var map = new kakao.maps.Map(document.getElementById('map'), { // 지도를 표시할 div
+        center : new kakao.maps.LatLng(37.564214, 127.001699), // 지도의 중심좌표
+        level :8  // 지도의 확대 레벨 , 8로 설정해야 서울시를 한눈에 보기 편함
+    }); // 지도를 생성합니다
+
+    let service ;
+    $(document).ready(function() {
+     $('.servicecode').on("click", function() {     //버튼 클릭시 호출되는 함수
+           $(this).addClass('active');      //클릭된 버튼에 속성(class 추가)
+           $(this).attr("disabled", true);
+           service=($(this).val());//클릭된 버튼의 value 값
+           $('.selectedArea').after(service);
+     });
+    });
+      $('.reload').on("click",function(){
+        location.reload();
+    })
+
+// 커스텀 오버레이에 표시할 내용입니다
+// HTML 문자열 또는 Dom Element 입니다
+
+let guname = new Array() ; // 구 이름을 저장할 배열선언
+let gulat= new Array() ;
+let gulng= new Array() ;
+let moveLatLon= new Array() ;
+var position; //// 커스텀 오버레이가 표시될 위치입니다
+
+$.getJSON('http://127.0.0.1:8000/map/', function(data){
+
+    var aJsonArray = new Array(); //json 데이터 저장할 배열
+
+    $.each(data.positions, function(i, item ){ // 제이쿼리 each  == for문  position{} 에 접근해서 lat, lng, gu 하나씩 저장
+
+        var jsondata = JSON.stringify(item); // 문자열변환
+       //console.log(jsondata) // {"lat":"33.450690851406016","lng":"126.57040313031214"}
+         // lat : "123", "lng" : 123 형식이어야 파싱 성공
+
+
+        var obj = eval("("+jsondata+")"); //object 형태로 변경
+       //console.log(obj) // {lat: "33.450690851406016", lng: "126.57040313031214"}
+
+
+        var aJson = new Object(); //오브젝 생성
+
+        aJson.lat = obj.lat;  //오브젝트에 값 저장
+        aJson.lng = obj.lng;
+        aJson.gu = obj.gu;
+        aJson.cnt = obj.cnt;
+
+        aJsonArray.push(aJson); //오브젝트값을 배열에 저장
+
+
+    })
+    console.log(aJsonArray);
+
+
+     $.each(aJsonArray, function (index, item) //for 문 index- 0,1,2,,, item- {lat, lng, gu}
+    {
+        position = new kakao.maps.LatLng(item.lat,item.lng);
+        guname[index] = item.gu; //구 이름 저장
+        gulat[index] = item.lat;
+        gulng[index] = item.lng;
+
+        var customOverlay = new kakao.maps.CustomOverlay({
+        position: position,
+       /*  content : '<div class ="label"><span class="left"></span><span class="center">'+item.gu+ item.cnt+'</span><span class="right"></span></div>' , */
+        content : '<div class="circle" onclick="panTo('+item.lat+','+item.lng+'); showgu(\'' + item.gu + '\')" title="클릭"><span class ="circlegu">'+item.gu+ '</span><div class="circlecnt">'+item.cnt+'</div></div>'
+        //함수를 실행할 때 현재 위도 경도를 넘겨줌
+        });
+
+
+
+        customOverlay.setMap(map);
+
+
+
+
+    })
+
+})
+
+</script>
+
+
+<script>
+
+
+// 다각형을 구성하는 좌표 배열입니다. 이 좌표들을 이어서 다각형을 표시합니다
+
+        function DrawPolygon() {
+            $.getJSON("polygon", function (geojson) {
+                var data = geojson.features;
+                var name = '';
+                var code = '';
+                var sgname= '' ;
+                var coordinates = [];
+                // console.log(data);
+
+                $.each(data, function (index, val) {
+                    name = val.properties.TRDAR_NM;
+                    code = val.properties.TRDAR_NO;
+                    sgname = val.properties.TRDAR_SE_1; //상권 이름
+                    coordinates = val.geometry.coordinates;
+                    // console.log(coordinates);
+                    displayArea1(name, code, coordinates, sgname);
+
+                });
+            });
+        }
+
+        function DrawPolygon2() {
+            $.getJSON("polygon2", function (geojson) {
+                var data = geojson.features;
+                var name = '';
+                var code = '';
+                var sgname= '' ;
+                var coordinates = [];
+                // console.log(data);
+
+                $.each(data, function (index, val) {
+                    name = val.properties.TRDAR_NM;
+                    code = val.properties.TRDAR_NO;
+                    sgname = val.properties.TRDAR_SE_1; //상권 이름
+                    coordinates = val.geometry.coordinates;
+                    // console.log(coordinates);
+                    displayArea2(name, code, coordinates, sgname);
+
+
+            })
+                });
+
+        }
+
+        function displayArea1(name, code, coordinates ,sgname) {
+            var polygonPath = [];
+            $.each(coordinates[0], function (index, coordinate) {
+                    polygonPath.push(new kakao.maps.LatLng(coordinate[1], coordinate[0]));
+                }
+            );
+// 지도에 표시할 다각형을 생성합니다
+            var polygon = new kakao.maps.Polygon({
+                path: polygonPath, // 그려질 다각형의 좌표 배열입니다
+                strokeWeight: 3, // 선의 두께입니다
+                strokeColor: '#39DE2A', // 선의 색깔입니다
+                strokeOpacity: 0.8, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+                strokeStyle: 'dash', // 선의 스타일입니다
+                fillColor: '#A2FF99', // 채우기 색깔입니다
+                fillOpacity: 0.7 // 채우기 불투명도 입니다
+            });
+            kakao.maps.event.addListener(polygon, 'mouseover', function(mouseEvent) { //마우스 올려놨을 때 색 변하게
+             polygon.setOptions({fillColor: '#e3606c'});
+            polygon.setOptions({strokeColor: '#ea2121'});
+            });
+             kakao.maps.event.addListener(polygon, 'mouseout', function() { // 다각형에 mouseout 이벤트를 등록하고 이벤트가 발생하면 폴리곤의 채움색을 원래색으로 변경합니다
+                 polygon.setOptions({fillColor: '#A2FF99'});
+                 polygon.setOptions({strokeColor: '#39DE2A'});
+
+            });
+              kakao.maps.event.addListener(polygon, 'mousedown', function() {
+                  showCommercialArea(sgname);
+                  showCommercialAreaName(name);
+
+              });
+            polygon.setMap(map);
+        }
+
+
+        function displayArea2(name, code, coordinates ,sgname) {
+            var polygonPath = [];
+            $.each(coordinates[0], function (index, coordinate) {
+                    polygonPath.push(new kakao.maps.LatLng(coordinate[1], coordinate[0]));
+                }
+            );
+// 지도에 표시할 다각형을 생성합니다
+            var polygon = new kakao.maps.Polygon({
+                path: polygonPath, // 그려질 다각형의 좌표 배열입니다
+                strokeWeight: 3, // 선의 두께입니다
+                strokeColor: '#1400f5', // 선의 색깔입니다
+                strokeOpacity: 0.8, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+                strokeStyle: 'dash', // 선의 스타일입니다
+                fillColor: '#52c2fa', // 채우기 색깔입니다
+                fillOpacity: 0.7 // 채우기 불투명도 입니다
+            });
+             kakao.maps.event.addListener(polygon, 'mouseover', function(mouseEvent) { //마우스 올려놨을 때 색 변하게
+             polygon.setOptions({fillColor: '#e3606c'});
+             polygon.setOptions({strokeColor: '#ea2121'});
+
+            });
+             kakao.maps.event.addListener(polygon, 'mouseout', function() { // 다각형에 mouseout 이벤트를 등록하고 이벤트가 발생하면 폴리곤의 채움색을 원래색으로 변경합니다
+                 polygon.setOptions({fillColor: '#52c2fa'});
+                 polygon.setOptions({strokeColor: '#1400f5'});
+
+    });
+             kakao.maps.event.addListener(polygon, 'mousedown', function() {
+                  showCommercialArea(sgname);
+                  showCommercialAreaName(name);
+
+
+              });
+            polygon.setMap(map);
+        }
+let Data;
+// 지도에 다각형을 표시합니다
+
+
+{#var chartArea = document.getElementById('myChart').getContext('2d');#}
+{#// 차트를 생성한다.#}
+{#var myChart = new Chart(chartArea, {#}
+{#    // ①차트의 종류(String)#}
+{#    type: 'bar',#}
+{#    // ②차트의 데이터(Object)#}
+{#    data: {#}
+{#        // ③x축에 들어갈 이름들(Array)#}
+{#        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],#}
+{#        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.#}
+{#        datasets: [{#}
+{#            // ⑤dataset의 이름(String)#}
+{#            label: '# of Votes',#}
+{#            // ⑥dataset값(Array)#}
+{#            data: [12, 19, 3, 5, 2, 3],#}
+{#            // ⑦dataset의 배경색(rgba값을 String으로 표현)#}
+{#            backgroundColor: 'rgba(255, 99, 132, 0.2)',#}
+{#            // ⑧dataset의 선 색(rgba값을 String으로 표현)#}
+{#            borderColor: 'rgba(255, 99, 132, 1)',#}
+{#            // ⑨dataset의 선 두께(Number)#}
+{#            borderWidth: 1#}
+{#        }]#}
+{#    },#}
+{#    // ⑩차트의 설정(Object)#}
+{#    options: {#}
+{#        responsive: false,#}
+{#        // ⑪축에 관한 설정(Object)#}
+{#        scales: {#}
+{#            // ⑫y축에 대한 설정(Object)#}
+{#            y: {#}
+{#                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)#}
+{#                beginAtZero: true#}
+{#            }#}
+{#        }#}
+{#    }#}
+{# });#}
+// url = https://gillog/post/1?tag=javascript&like=backend
+const urlParameter = window.location.search; // 현재 url 가져옴
+
+// ?tag=javascript&like=backend
+console.log(urlParameter);
+fetch('http://127.0.0.1:8000/test/?cCode=%EA%B5%AC%EC%9D%98%EC%82%AC%EA%B1%B0%EB%A6%AC&serviceCode=%EB%B6%84%EC%8B%9D%EC%A0%84%EB%AC%B8%EC%A0%90')
+  .then(res => res.json())
+  .then(res => {
+//막대 그래프
+var chartArea = document.getElementById('myChart').getContext('2d');
+// 차트를 생성한다.
+var myChart = new Chart(chartArea, {
+    // ①차트의 종류(String)
+    type: 'bar',
+    // ②차트의 데이터(Object)
+    data: {
+        // ③x축에 들어갈 이름들(Array)
+        labels: res["점포수"].label,
+        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.
+        datasets: [{
+            // ⑤dataset의 이름(String)
+            label: '# of Votes',
+            // ⑥dataset값(Array)
+            data: res["점포수"].data,
+            // ⑦dataset의 배경색(rgba값을 String으로 표현)
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            // ⑧dataset의 선 색(rgba값을 String으로 표현)
+            borderColor: 'rgba(255, 99, 132, 1)',
+            // ⑨dataset의 선 두께(Number)
+            borderWidth: 1
+        }]
+    },
+    // ⑩차트의 설정(Object)
+    options: {
+        responsive: false,
+        // ⑪축에 관한 설정(Object)
+        scales: {
+            // ⑫y축에 대한 설정(Object)
+            y: {
+                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)
+                beginAtZero: true
+            }
+        }
+    }
+});
+//파이차트
+var chartArea1 = document.getElementById('myChart1').getContext('2d');
+var myChart1 = new Chart(chartArea1, {
+    // ①차트의 종류(String)
+    type: 'pie',
+    // ②차트의 데이터(Object)
+    data: {
+        // ③x축에 들어갈 이름들(Array)
+        labels: res["일반/프랜차이즈"].label,
+        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.
+        datasets: [{
+            // ⑤dataset의 이름(String)
+            label: '일반/프랜차이즈',
+            // ⑥dataset값(Array)
+            data: res["일반/프랜차이즈"].data,
+            // ⑦dataset의 배경색(rgba값을 String으로 표현)
+             backgroundColor: ['#28c3d7', '#FF6384'],
+
+            // ⑧dataset의 선 색(rgba값을 String으로 표현)
+            borderColor: 'rgb(234,33,33)',
+            // ⑨dataset의 선 두께(Number)
+            borderWidth: 1
+        }]
+    },
+    // ⑩차트의 설정(Object)
+    options: {
+        responsive: false,
+        // ⑪축에 관한 설정(Object)
+        scales: {
+            // ⑫y축에 대한 설정(Object)
+            y: {
+                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)
+                beginAtZero: true
+            }
+        }
+    }
+});
+});
+</script>
+</body>
+</html>
