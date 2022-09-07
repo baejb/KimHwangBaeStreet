@@ -17,10 +17,12 @@
     <div id="menu_wrap" class="bg_white">
         <div class="search">
             <div>
-                <form action="" method="get">
-                    지역 <input type="search" name="guName">
-                    <input type="submit" value="검색">
+                <form action="" method="get" onsubmit="showguSearch();">
+                     <input type="search" name="guName">
+
+                    <input type="submit"  value="검색">
                 </form>
+
             </div>
         </div>
 
@@ -85,6 +87,13 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 <script>
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+var urlguname = getParameterByName('guName');
 
     //분석 리포트 띄우기
 fetch('http://127.0.0.1:8000/population/?cCode=선일여고')
@@ -128,6 +137,13 @@ function showReportHead(){
     let sgname = document.getElementById('reportHeadsgName');
     sgname.innerHTML = reportsgName;
 }
+function showguSearch(){
+    let Guname = document.getElementById('selectArea');
+    Guname.innerHTML =urlguname;
+    console.log(urlguname);
+
+
+}
 function showgu(gu){
 
     let Guname = document.getElementById('selectArea');
@@ -135,7 +151,6 @@ function showgu(gu){
         Guname.innerHTML = gu;
         DrawPolygon();
         DrawPolygon2();
-
 
 }
 function showCommercialArea(CommercialArea){
@@ -217,7 +232,7 @@ $.getJSON('http://127.0.0.1:8000/map/', function(data){
         var customOverlay = new kakao.maps.CustomOverlay({
         position: position,
        /*  content : '<div class ="label"><span class="left"></span><span class="center">'+item.gu+ item.cnt+'</span><span class="right"></span></div>' , */
-        content : '<div class="circle" onclick="panTo('+item.lat+','+item.lng+'); showgu(\'' + item.gu + '\')" title="클릭"><span class ="circlegu">'+item.gu+ '</span><div class="circlecnt">'+item.cnt+'</div></div>'
+        content : '<div class="circle" onclick="panTo('+item.lat+','+item.lng+'); showgu(\'' + item.gu + '\') " title="클릭"><span class ="circlegu">'+item.gu+ '</span><div class="circlecnt">'+item.cnt+'</div></div>'
         //함수를 실행할 때 현재 위도 경도를 넘겨줌
         });
 
@@ -396,7 +411,7 @@ let Data;
 const urlParameter = window.location.search; // 현재 url 가져옴
 
 // ?tag=javascript&like=backend
-console.log(urlParameter);
+//console.log(urlParameter);
 fetch('http://127.0.0.1:8000/test/?cCode=%EA%B5%AC%EC%9D%98%EC%82%AC%EA%B1%B0%EB%A6%AC&serviceCode=%EB%B6%84%EC%8B%9D%EC%A0%84%EB%AC%B8%EC%A0%90')
   .then(res => res.json())
   .then(res => {
