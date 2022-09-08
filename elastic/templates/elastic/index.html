@@ -159,7 +159,7 @@ function showCommercialArea(CommercialArea){
     let sg = document.getElementById('cA1');
     sg.innerHTML =CommercialArea ;
     reportsg=CommercialArea;
-    history.pushState(null, null, '?cCode='+reportsg+'&serviceCode='+reportsg) // 리로드 없이 주소창 변경하기
+
 
 
 
@@ -168,7 +168,7 @@ function showCommercialAreaName(CommercialAreaName){
     reportsgName = CommercialAreaName;
     let sgName = document.getElementById('cA2');
     sgName.innerHTML =CommercialAreaName ;
-
+    history.pushState(null, null, '?cCode='+reportsgName+'&serviceCode='+reportsg) // 리로드 없이 주소창 변경하기
 }
 
 
@@ -191,6 +191,8 @@ function showCommercialAreaName(CommercialAreaName){
         window.location = "http://127.0.0.1:8000/index/";
 
     })
+    $('.clickreport').attr("disabled", true);
+console.log(service);
 
 // 커스텀 오버레이에 표시할 내용입니다
 // HTML 문자열 또는 Dom Element 입니다
