@@ -7,6 +7,9 @@
     *{
         font-family: DalseoHealingBold;
     }
+    body{
+        height: 100%;
+    }
     #map{
         z-index: 1;
     }
@@ -87,15 +90,19 @@
     text-align: center;
 
 }
+.ResultReport0{
 
+
+
+}
 
 .ResultReport{
     position :absolute ;
-    top: 11%;
+    overflow: auto;
     left: 60%;
     font-size:30px;
     width: 80%;
-    height: 90%;
+    height: 100%;
     z-index: 2;
     background-color: #fde288;
 }
