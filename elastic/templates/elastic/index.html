@@ -4,16 +4,15 @@
 <head>
     <meta charset="utf-8">
     <title>김황배의 골목식당</title><base href="http://127.0.0.1:8000/index/" />
-{#    <link href="css/style.css" rel="stylesheet">#}
     <link rel="stylesheet" href="{% static 'elastic/css/style.css' %}">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
 </head>
 <body>
 <h1>김황배의 골목식당</h1>
 <div class="map_wrap" >
-    <!-- <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div> -->
     <div id="menu_wrap" class="bg_white">
         <div class="search">
             <div>
@@ -58,8 +57,7 @@
 </div>
 </div>
 
-
-<div id="map" style="width:100%;height:700px;"></div>
+<div id="map" style="width:100%;height:700px;">
 <!-- position:relative;overflow:hidden; -->
 <div class="ResultReport" style="display: none" >
    <!--분석 리포트 띄우는 창 !  -->
@@ -76,17 +74,28 @@
         <hr>
         <div id="resultpopulation"></div>
     </div>
-    <div id="ResultReport0">분석 리포트 입니다  </div>
-    <canvas id="myChart" width="height:30vh; width:50vw"></canvas>
-    <canvas id="myChart1" width="height:30vh; width:50vw"></canvas>
+    <div class="ResultReport0">분석 리포트 입니다
+        <div class="chart-wrap">
+            <canvas id="점포수" width="height:30vh; width:50vw"></canvas>
+            <canvas id="프랜차이즈" width="height:10vh; width:10vw"></canvas>
+            <canvas id="개업수" width="height:30vh; width:50vw"></canvas>
+            <canvas id="폐업수" width="height:30vh; width:50vw"></canvas>
 
+            <canvas id="요일별매출" width="height:30vh; width:50vw"></canvas>
+            <canvas id="시간대별매출" width="height:30vh; width:50vw"></canvas>
+        </div>
+    </div>
 </div>
-
+</div>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a9792b3125b1c069b26e0cd44dd8c3ed&libraries=clusterer"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+
+
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
 <script type="text/javascript" src="/static/elastic/js/gudata.js"></script>
 <script>
     $(document).ready(function(){
@@ -112,18 +121,7 @@ var urlguname = getParameterByName('guName');
 let thislink = "http://127.0.0.1:8000/test/?cCode=%EC%97%B0%EC%8B%A0%EB%82%B4%EC%97%AD&serviceCode=%EB%B6%84%EC%8B%9D%EC%A0%84%EB%AC%B8%EC%A0%90"
 
 
-{#function clickReport(){#}
-{#    var link =  document.location.href;#}
-{#    var result = link.replace('index', 'test');#}
-{#    thislink =result;#}
-{#    console.log("바뀐 json");#}
-{#    console.log(thislink);#}
-{#    if($('.ResultReport').css('display')== 'none'){#}
-{#        $('.ResultReport').show();#}
-{#    }else{#}
-{#        $('.ResultReport').hide();#}
-{#    }#}
-{#}#}
+
 
  function panTo(lat,lng) {
             // 이동할 위도 경도 위치를 생성합니다
@@ -402,55 +400,14 @@ $.getJSON('http://127.0.0.1:8000/map/', function(data){
             polygon.setMap(map);
         }
 let Data;
-// 지도에 다각형을 표시합니다
 
+//const urlParameter = window.location.search; // 현재 url 가져옴
 
-{#var chartArea = document.getElementById('myChart').getContext('2d');#}
-{#// 차트를 생성한다.#}
-{#var myChart = new Chart(chartArea, {#}
-{#    // ①차트의 종류(String)#}
-{#    type: 'bar',#}
-{#    // ②차트의 데이터(Object)#}
-{#    data: {#}
-{#        // ③x축에 들어갈 이름들(Array)#}
-{#        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],#}
-{#        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.#}
-{#        datasets: [{#}
-{#            // ⑤dataset의 이름(String)#}
-{#            label: '# of Votes',#}
-{#            // ⑥dataset값(Array)#}
-{#            data: [12, 19, 3, 5, 2, 3],#}
-{#            // ⑦dataset의 배경색(rgba값을 String으로 표현)#}
-{#            backgroundColor: 'rgba(255, 99, 132, 0.2)',#}
-{#            // ⑧dataset의 선 색(rgba값을 String으로 표현)#}
-{#            borderColor: 'rgba(255, 99, 132, 1)',#}
-{#            // ⑨dataset의 선 두께(Number)#}
-{#            borderWidth: 1#}
-{#        }]#}
-{#    },#}
-{#    // ⑩차트의 설정(Object)#}
-{#    options: {#}
-{#        responsive: false,#}
-{#        // ⑪축에 관한 설정(Object)#}
-{#        scales: {#}
-{#            // ⑫y축에 대한 설정(Object)#}
-{#            y: {#}
-{#                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)#}
-{#                beginAtZero: true#}
-{#            }#}
-{#        }#}
-{#    }#}
-{# });#}
-// url = https://gillog/post/1?tag=javascript&like=backend
-const urlParameter = window.location.search; // 현재 url 가져옴
-
-// ?tag=javascript&like=backend
-//console.log(urlParameter);
+// 분석하기 버튼 클릭했을 시 차트 띄우기
 function clickReport(){
     var link =  document.location.href;
     var result = link.replace('index', 'test');
     thislink =result;
-    console.log("바뀐 json");
     console.log(thislink);
     if($('.ResultReport').css('display')== 'none'){
         $('.ResultReport').show();
@@ -462,11 +419,11 @@ fetch(thislink)
   .then(res => res.json())
   .then(res => {
 //막대 그래프
-var chartArea = document.getElementById('myChart').getContext('2d');
+var chartArea = document.getElementById('점포수').getContext('2d');
 // 차트를 생성한다.
 var myChart = new Chart(chartArea, {
     // ①차트의 종류(String)
-    type: 'bar',
+    type: 'line',
     // ②차트의 데이터(Object)
     data: {
         // ③x축에 들어갈 이름들(Array)
@@ -498,8 +455,8 @@ var myChart = new Chart(chartArea, {
         }
     }
 });
-//파이차트
-var chartArea1 = document.getElementById('myChart1').getContext('2d');
+//프랜차이즈와 일반점포 비율 파이차트
+var chartArea1 = document.getElementById('프랜차이즈').getContext('2d');
 var myChart1 = new Chart(chartArea1, {
     // ①차트의 종류(String)
     type: 'pie',
@@ -518,6 +475,162 @@ var myChart1 = new Chart(chartArea1, {
 
             // ⑧dataset의 선 색(rgba값을 String으로 표현)
             borderColor: 'rgb(234,33,33)',
+            // ⑨dataset의 선 두께(Number)
+            borderWidth: 1
+        }]
+    },
+    // ⑩차트의 설정(Object)
+    options: {
+        responsive: false,
+        // ⑪축에 관한 설정(Object)
+        scales: {
+            // ⑫y축에 대한 설정(Object)
+            y: {
+                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)
+                beginAtZero: true
+            }
+        }
+    }
+});
+// 개업수 막대그래프
+var chartArea2 = document.getElementById('개업수').getContext('2d');
+var myChart2 = new Chart(chartArea2, {
+    // ①차트의 종류(String)
+    type: 'bar',
+    // ②차트의 데이터(Object)
+    data: {
+        // ③x축에 들어갈 이름들(Array)
+        labels: res["개업수"].label,
+        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.
+        datasets: [{
+            // ⑤dataset의 이름(String)
+            label: '개업수',
+            // ⑥dataset값(Array)
+            data: res["개업수"].data,
+            // ⑦dataset의 배경색(rgba값을 String으로 표현)
+             backgroundColor: ['#28c3d7', '#FF6384'],
+
+            // ⑧dataset의 선 색(rgba값을 String으로 표현)
+            borderColor: 'rgb(234,33,33)',
+            // ⑨dataset의 선 두께(Number)
+            borderWidth: 1
+        }]
+    },
+    // ⑩차트의 설정(Object)
+    options: {
+        responsive: false,
+        // ⑪축에 관한 설정(Object)
+        scales: {
+            // ⑫y축에 대한 설정(Object)
+            yAxes: [{
+					ticks: {
+						beginAtZero: true,
+						fontSize : 14,
+					}
+				}]
+        }
+    }
+});
+//폐업수 막대그래프
+var chartArea3 = document.getElementById('폐업수').getContext('2d');
+var myChart3 = new Chart(chartArea3, {
+    // ①차트의 종류(String)
+    type: 'bar',
+    // ②차트의 데이터(Object)
+    data: {
+        // ③x축에 들어갈 이름들(Array)
+        labels: res["폐업수"].label,
+        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.
+        datasets: [{
+            // ⑤dataset의 이름(String)
+            label: '폐업수',
+            // ⑥dataset값(Array)
+            data: res["폐업수"].data,
+            // ⑦dataset의 배경색(rgba값을 String으로 표현)
+             backgroundColor: ['#28c3d7', '#FF6384'],
+
+            // ⑧dataset의 선 색(rgba값을 String으로 표현)
+            borderColor: 'rgb(234,33,33)',
+            // ⑨dataset의 선 두께(Number)
+            borderWidth: 1
+        }]
+    },
+    // ⑩차트의 설정(Object)
+    options: {
+        responsive: false,
+        // ⑪축에 관한 설정(Object)
+        scales: {
+            // ⑫y축에 대한 설정(Object)
+           yAxes: [{
+					ticks: {
+						beginAtZero: true,
+						fontSize : 14,
+					}
+				}]
+        }
+    }
+});
+//요일별 매출 막대그래프
+
+var chartArea4 = document.getElementById('요일별매출').getContext('2d');
+var myChart4 = new Chart(chartArea4, {
+    // ①차트의 종류(String)
+    type: 'bar',
+
+    // ②차트의 데이터(Object)
+    data: {
+        // ③x축에 들어갈 이름들(Array)
+        labels: res["매출-요일별"].label,
+        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.
+        datasets: [{
+            // ⑤dataset의 이름(String)
+            label: '매출-요일별',
+            // ⑥dataset값(Array)
+            data: res["매출-요일별"].data,
+            // ⑦dataset의 배경색(rgba값을 String으로 표현)
+             backgroundColor: ['#28c3d7', '#FF6384','#fde288','#db3545'],
+
+            // ⑧dataset의 선 색(rgba값을 String으로 표현)
+            borderColor: 'rgb(234,33,33)',
+            // ⑨dataset의 선 두께(Number)
+            borderWidth: 1
+        }]
+    },
+    // ⑩차트의 설정(Object)
+    options: {
+        responsive: false,
+
+        },
+        // ⑪축에 관한 설정(Object)
+        scales: {
+            // ⑫y축에 대한 설정(Object)
+          y: {
+                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)
+                beginAtZero: true
+            }
+        }
+
+});
+//매출 시간대별 막대그래프
+var chartArea5 = document.getElementById('시간대별매출').getContext('2d');
+// 차트를 생성한다.
+var myChart5 = new Chart(chartArea5, {
+    // ①차트의 종류(String)
+    type: 'line',
+    // ②차트의 데이터(Object)
+    data: {
+        // ③x축에 들어갈 이름들(Array)
+        labels: res["매출-시간대별"].label,
+        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.
+        datasets: [{
+            // ⑤dataset의 이름(String)
+            label: '# 시간대별 매출',
+            // ⑥dataset값(Array)
+            data: res["매출-시간대별"].data,
+            // ⑦dataset의 배경색(rgba값을 String으로 표현)
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            // ⑧dataset의 선 색(rgba값을 String으로 표현)
+            borderColor: 'rgba(255, 99, 132, 1)',
             // ⑨dataset의 선 두께(Number)
             borderWidth: 1
         }]
