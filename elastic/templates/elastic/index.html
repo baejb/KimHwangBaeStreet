@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>김황배의 골목식당</title>
+    <title>김황배의 골목식당</title><base href="http://127.0.0.1:8000/index/" />
 {#    <link href="css/style.css" rel="stylesheet">#}
     <link rel="stylesheet" href="{% static 'elastic/css/style.css' %}">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
@@ -18,7 +18,7 @@
         <div class="search">
             <div>
                 <form action="" method="get" onsubmit="showguSearch();">
-                     <input type="search" name="guName">
+                     <input id="searchInput" type="search" name="guName">
 
                     <input type="submit"  value="검색">
                 </form>
@@ -39,15 +39,15 @@
             <span id="cA2"></span> <!--이 곳에 선택된 상권이름  -->
         </div>
     <section class="service">
-        <button class="servicecode" value="한식음식점">한식음식점</button>
-        <button class="servicecode" value="일식음식점">일식음식점</button>
-        <button class="servicecode" value="중식음식점">중식음식점</button>
-        <button class="servicecode" value="제과점">제과점</button>
-        <button class="servicecode" value="패스트푸드점">패스트푸드점</button>
-        <button class="servicecode" value="치킨전문점">치킨전문점</button>
-        <button class="servicecode" value="분식전문점">분식전문점</button>
-        <button class="servicecode" value="호프/간이주점">호프/간이주점</button>
-        <button class="servicecode" value="커피/음료">커피/음료</button>
+        <button class="servicecode" value="한식음식점" onclick="bringClickValue(this);">한식음식점</button>
+        <button class="servicecode" value="일식음식점" onclick="bringClickValue(this);">일식음식점</button>
+        <button class="servicecode" value="중식음식점" onclick="bringClickValue(this);">중식음식점</button>
+        <button class="servicecode" value="제과점" onclick="bringClickValue(this);">제과점</button>
+        <button class="servicecode" value="패스트푸드점" onclick="bringClickValue(this);">패스트푸드점</button>
+        <button class="servicecode" value="치킨전문점" onclick="bringClickValue(this);">치킨전문점</button>
+        <button class="servicecode" value="분식전문점" onclick="bringClickValue(this);">분식전문점</button>
+        <button class="servicecode" value="호프/간이주점" onclick="bringClickValue(this);">호프/간이주점</button>
+        <button class="servicecode" value="커피/음료" onclick="bringClickValue(this);">커피/음료</button>
     </section>
     <div class="clickreport">
         <button onclick="clickReport(); showReportHead()" id="report">분석하기</button>
@@ -86,7 +86,20 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script type="text/javascript" src="/static/elastic/js/gudata.js"></script>
 <script>
+    $(document).ready(function(){
+    $("#searchInput").autocomplete({  //오토 컴플릿트 시작
+         source: List,   // source는 gudata.js파일 내부의 List 배열
+         focus : function(event, ui) { // 방향키로 자동완성단어 선택 가능하게 만들어줌
+            return false;
+         },
+         minLength: 1,// 최소 글자수
+         delay: 100,   //autocomplete 딜레이 시간(ms)
+         //disabled: true, //자동완성 기능 끄기
+      });
+   });
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -96,16 +109,15 @@ function getParameterByName(name) {
 var urlguname = getParameterByName('guName');
 
 
-    //분석 리포트 띄우기
-{#fetch('http://127.0.0.1:8000/population/?cCode=선일여고')#}
-{#  .then(res => res.json())#}
-{#  .then(res => {#}
-{#      console.log(res["상권-생활인구"]);#}
-{#      document.getElementById("resultpopulation").innerHTML = res["상권-생활인구"]["금요일_생활인구_수"];#}
-{##}
-{#    //cconsole.log(`${res.상권-생활인구[0]}`);// data를 응답 받은 후의 로직#}
-{#  });#}
+let thislink = "http://127.0.0.1:8000/test/?cCode=%EC%97%B0%EC%8B%A0%EB%82%B4%EC%97%AD&serviceCode=%EB%B6%84%EC%8B%9D%EC%A0%84%EB%AC%B8%EC%A0%90"
+
+
 function clickReport(){
+    var link =  document.location.href;
+    var result = link.replace('index', 'test');
+    thislink =result;
+    console.log("바뀐 json");
+    console.log(thislink);
     if($('.ResultReport').css('display')== 'none'){
         $('.ResultReport').show();
     }else{
@@ -164,11 +176,16 @@ function showCommercialArea(CommercialArea){
 
 
 }
+
+
+
 function showCommercialAreaName(CommercialAreaName){
     reportsgName = CommercialAreaName;
     let sgName = document.getElementById('cA2');
     sgName.innerHTML =CommercialAreaName ;
-    history.pushState(null, null, '?cCode='+reportsgName+'&serviceCode='+reportsg) // 리로드 없이 주소창 변경하기
+    history.pushState(null, null, '?cCode='+reportsgName+'&serviceCode='+service) // 리로드 없이 주소창 변경하기
+    var link =  document.location.href;
+
 }
 
 
@@ -176,23 +193,30 @@ function showCommercialAreaName(CommercialAreaName){
         center : new kakao.maps.LatLng(37.564214, 127.001699), // 지도의 중심좌표
         level :8  // 지도의 확대 레벨 , 8로 설정해야 서울시를 한눈에 보기 편함
     }); // 지도를 생성합니다
+    let service;
+    function bringClickValue(arg0){
+        var value = $(arg0).val();
+        service =value;
+        history.pushState(null, null, '?cCode='+reportsgName+'&serviceCode='+service)
 
-    let service ;
-    $(document).ready(function() {
-     $('.servicecode').on("click", function() {     //버튼 클릭시 호출되는 함수
-           $(this).addClass('active');      //클릭된 버튼에 속성(class 추가)
-           $(this).attr("disabled", true);
-           service=($(this).val());//클릭된 버튼의 value 값
-           $('.selectedArea').after(service);
-     });
-    });
+    }
+
+    {#let service ;#}
+    {#$(document).ready(function() {#}
+    {# $('.servicecode').on("click", function() {     //버튼 클릭시 호출되는 함수#}
+    {#       $(this).addClass('active');      //클릭된 버튼에 속성(class 추가)#}
+    {#       $(this).attr("disabled", true);#}
+    {#       service=($(this).val());//클릭된 버튼의 value 값#}
+    {#       $('.selectedArea').after(service);#}
+    {# });#}
+
       $('.reload').on("click",function(){
         location.reload();
         window.location = "http://127.0.0.1:8000/index/";
 
     })
     $('.clickreport').attr("disabled", true);
-console.log(service);
+
 
 // 커스텀 오버레이에 표시할 내용입니다
 // HTML 문자열 또는 Dom Element 입니다
@@ -422,7 +446,7 @@ const urlParameter = window.location.search; // 현재 url 가져옴
 
 // ?tag=javascript&like=backend
 //console.log(urlParameter);
-fetch('http://127.0.0.1:8000/test/?cCode=%EA%B5%AC%EC%9D%98%EC%82%AC%EA%B1%B0%EB%A6%AC&serviceCode=%EB%B6%84%EC%8B%9D%EC%A0%84%EB%AC%B8%EC%A0%90')
+fetch(thislink)
   .then(res => res.json())
   .then(res => {
 //막대 그래프
@@ -501,5 +525,6 @@ var myChart1 = new Chart(chartArea1, {
 });
 });
 </script>
+
 </body>
 </html>
