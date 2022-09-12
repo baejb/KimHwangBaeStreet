@@ -112,18 +112,18 @@ var urlguname = getParameterByName('guName');
 let thislink = "http://127.0.0.1:8000/test/?cCode=%EC%97%B0%EC%8B%A0%EB%82%B4%EC%97%AD&serviceCode=%EB%B6%84%EC%8B%9D%EC%A0%84%EB%AC%B8%EC%A0%90"
 
 
-function clickReport(){
-    var link =  document.location.href;
-    var result = link.replace('index', 'test');
-    thislink =result;
-    console.log("바뀐 json");
-    console.log(thislink);
-    if($('.ResultReport').css('display')== 'none'){
-        $('.ResultReport').show();
-    }else{
-        $('.ResultReport').hide();
-    }
-}
+{#function clickReport(){#}
+{#    var link =  document.location.href;#}
+{#    var result = link.replace('index', 'test');#}
+{#    thislink =result;#}
+{#    console.log("바뀐 json");#}
+{#    console.log(thislink);#}
+{#    if($('.ResultReport').css('display')== 'none'){#}
+{#        $('.ResultReport').show();#}
+{#    }else{#}
+{#        $('.ResultReport').hide();#}
+{#    }#}
+{#}#}
 
  function panTo(lat,lng) {
             // 이동할 위도 경도 위치를 생성합니다
@@ -446,6 +446,18 @@ const urlParameter = window.location.search; // 현재 url 가져옴
 
 // ?tag=javascript&like=backend
 //console.log(urlParameter);
+function clickReport(){
+    var link =  document.location.href;
+    var result = link.replace('index', 'test');
+    thislink =result;
+    console.log("바뀐 json");
+    console.log(thislink);
+    if($('.ResultReport').css('display')== 'none'){
+        $('.ResultReport').show();
+    }else{
+        $('.ResultReport').hide();
+    }
+
 fetch(thislink)
   .then(res => res.json())
   .then(res => {
@@ -523,7 +535,7 @@ var myChart1 = new Chart(chartArea1, {
         }
     }
 });
-});
+});}
 </script>
 
 </body>
