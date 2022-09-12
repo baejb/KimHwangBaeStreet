@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{% static 'elastic/css/style.css' %}">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
 </head>
 <body>
@@ -112,18 +113,7 @@ var urlguname = getParameterByName('guName');
 let thislink = "http://127.0.0.1:8000/test/?cCode=%EC%97%B0%EC%8B%A0%EB%82%B4%EC%97%AD&serviceCode=%EB%B6%84%EC%8B%9D%EC%A0%84%EB%AC%B8%EC%A0%90"
 
 
-{#function clickReport(){#}
-{#    var link =  document.location.href;#}
-{#    var result = link.replace('index', 'test');#}
-{#    thislink =result;#}
-{#    console.log("바뀐 json");#}
-{#    console.log(thislink);#}
-{#    if($('.ResultReport').css('display')== 'none'){#}
-{#        $('.ResultReport').show();#}
-{#    }else{#}
-{#        $('.ResultReport').hide();#}
-{#    }#}
-{#}#}
+
 
  function panTo(lat,lng) {
             // 이동할 위도 경도 위치를 생성합니다
