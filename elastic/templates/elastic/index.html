@@ -8,20 +8,20 @@
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-<h1>김황배의 골목식당</h1>
-<div class="map_wrap" >
+<div id="title">김황배의 골목식당</div>
+ <div class="map_wrap" >
     <div id="menu_wrap" class="bg_white">
         <div class="search">
             <div>
-                <form action="" method="get" onsubmit="showguSearch();">
-                     <input id="searchInput" type="search" name="guName">
+                 <form  action="" method="get" onsubmit="showguSearch();">
+                     <input id="searchInput" type="search" name="guName" placeholder="검색어 입력"
+                     onfocus="this.placeholder=''" onblur="this.placeholder='Google 검색 및 URL 입력'">
+                     <input id="search_btn" type="submit"  value="검색" >
 
-                    <input type="submit"  value="검색">
                 </form>
-
             </div>
         </div>
 
@@ -48,10 +48,9 @@
         <button class="servicecode" value="호프/간이주점" onclick="bringClickValue(this);">호프/간이주점</button>
         <button class="servicecode" value="커피/음료" onclick="bringClickValue(this);">커피/음료</button>
     </section>
-    <div class="clickreport">
+
+        <div class="clickreport">
         <button onclick="clickReport(); showReportHead()" id="report">분석하기</button>
-    </div>
-        <div class="reload">
         <button id="reload" >새로고침</button>
     </div>
 </div>
@@ -92,10 +91,10 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>         src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 <script type="text/javascript" src="/static/elastic/js/gudata.js"></script>
 <script>
     $(document).ready(function(){
@@ -109,6 +108,33 @@
          //disabled: true, //자동완성 기능 끄기
       });
    });
+var servicecode2 = document.getElementsByClassName("servicecode");
+
+function handleClick(event) {
+  console.log(event.target);
+  // console.log(this);
+  // 콘솔창을 보면 둘다 동일한 값이 나온다
+
+  console.log(event.target.classList);
+
+  if (event.target.classList[1] === "clicked") {
+    event.target.classList.remove("clicked");
+  } else {
+    for (var i = 0; i < servicecode2.length; i++) {
+        servicecode2[i].classList.remove("clicked");
+    }
+
+    event.target.classList.add("clicked");
+  }
+}
+
+function init() {
+  for (var i = 0; i < servicecode2.length; i++) {
+    servicecode2[i].addEventListener("click", handleClick);
+  }
+}
+
+init();
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -208,7 +234,7 @@ function showCommercialAreaName(CommercialAreaName){
     {#       $('.selectedArea').after(service);#}
     {# });#}
 
-      $('.reload').on("click",function(){
+      $('#reload').on("click",function(){
         location.reload();
         window.location = "http://127.0.0.1:8000/index/";
 
@@ -616,6 +642,7 @@ var chartArea5 = document.getElementById('시간대별매출').getContext('2d');
 // 차트를 생성한다.
 var myChart5 = new Chart(chartArea5, {
     // ①차트의 종류(String)
+    plugins:[ChartDataLabels],
     type: 'line',
     // ②차트의 데이터(Object)
     data: {
@@ -638,6 +665,14 @@ var myChart5 = new Chart(chartArea5, {
     // ⑩차트의 설정(Object)
     options: {
         responsive: false,
+        plugins:{
+            datalabels:{
+                formatter:function(value,context){
+                    var idx = context.dataIndex;
+                    return context.chart.data.labels[idx]+ ' ' +addComma(value)+ (idx==0 ? '원' : 'P');
+                }
+            }
+        },
         // ⑪축에 관한 설정(Object)
         scales: {
             // ⑫y축에 대한 설정(Object)
