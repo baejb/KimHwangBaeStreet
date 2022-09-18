@@ -94,7 +94,8 @@
             <canvas id="연령대별상주인구" width="height:30vh; width:50vw"></canvas>
              <div>총 상주인구는 <span id="totaldwellingpopulation"></span>명 입니다. </div>
             <canvas id="연령대별직장인구" width="height:30vh; width:50vw"></canvas>
-             <div>총 직장인구는 <span id="totalworkplacepopulation"></span>명 입니다. </div>
+             <div>총 직장인구는 <span id="totalworkplacepopulation"></span>명 입니다.
+             <div>총 집객시설 수는 <span id="totalvisitorfacilities"></span>개 입니다.</div>
         </div>
     </div>
 </div>
@@ -1025,6 +1026,9 @@ var myChart13 = new Chart(chartArea13, {
 });
 var totalworkplacepopulation = document.getElementById('totalworkplacepopulation');
 totalworkplacepopulation.innerHTML = res["직장-총"];
+
+var totalvisitorfacilities = document.getElementById('totalvisitorfacilities');
+totalvisitorfacilities.innerHTML = res["집객시설수"];
 
 });}
 </script>
