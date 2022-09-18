@@ -59,6 +59,12 @@
 <!-- position:relative;overflow:hidden; -->
 <div class="ResultReport" style="display: none" >
    <!--분석 리포트 띄우는 창 !  -->
+    <!--분석 리포트 띄우는 창 !  -->
+    <div id="ReportTitleBar">
+        <div id="reportTitle">분석리포트</div>
+        <div id="clock" style="color:black;">clock</div>
+        <div id="close" onclick="closeReport();">X</div>
+    </div>
     <div class="ReportHead">
         <sapn>위치:</sapn>
         <span id="reportHeadGuname"></span>
@@ -137,6 +143,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 <script type="text/javascript" src="/static/elastic/js/gudata.js"></script>
 <script>
+
     $(document).ready(function(){
     $("#searchInput").autocomplete({  //오토 컴플릿트 시작
          source: List,   // source는 gudata.js파일 내부의 List 배열
@@ -175,6 +182,25 @@ function init() {
 }
 
 init();
+
+var Target = document.getElementById("clock");
+        function clock() {
+            var time = new Date();
+
+            var month = time.getMonth();
+            var date = time.getDate();
+            var day = time.getDay();
+            var week = ['일', '월', '화', '수', '목', '금', '토'];
+
+            Target.innerText =
+            `${month + 1}월 ${date}일 ${week[day]}요일 `
+        }
+        clock();
+function closeReport(){
+
+        $('.ResultReport').hide();
+
+}
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -503,9 +529,9 @@ function clickReport(){
     console.log(thislink);
     if($('.ResultReport').css('display')== 'none'){
         $('.ResultReport').show();
-    }else{
-        $('.ResultReport').hide();
-    }
+    }//else{
+       // $('.ResultReport').hide();
+
 
 fetch(thislink)
   .then(res => res.json())
