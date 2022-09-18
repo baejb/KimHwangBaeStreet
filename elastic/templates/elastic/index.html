@@ -3,26 +3,24 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>김황배의 골목식당</title>
-{#    <link href="css/style.css" rel="stylesheet">#}
+    <title>김황배의 골목식당</title><base href="http://127.0.0.1:8000/index/" />
     <link rel="stylesheet" href="{% static 'elastic/css/style.css' %}">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
-
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-<h1>김황배의 골목식당</h1>
-<div class="map_wrap" >
-    <!-- <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div> -->
+<div id="title">김황배의 골목식당</div>
+ <div class="map_wrap" >
     <div id="menu_wrap" class="bg_white">
         <div class="search">
             <div>
-                <form action="" method="get" onsubmit="showguSearch();">
-                     <input type="search" name="guName">
-
-                    <input type="submit"  value="검색">
+                <form  action="" method="get" onsubmit="return false;">
+                     <input id="searchInput" class="searchInput" type="search" name="guName" placeholder="검색어 입력"
+                     onfocus="this.placeholder=''" onblur="this.placeholder='검색어 입력'">
+                     <input id="search_btn" type="submit"  value="검색" >
                 </form>
-
             </div>
         </div>
 
@@ -39,27 +37,25 @@
             <span id="cA2"></span> <!--이 곳에 선택된 상권이름  -->
         </div>
     <section class="service">
-        <button class="servicecode" value="한식음식점">한식음식점</button>
-        <button class="servicecode" value="일식음식점">일식음식점</button>
-        <button class="servicecode" value="중식음식점">중식음식점</button>
-        <button class="servicecode" value="제과점">제과점</button>
-        <button class="servicecode" value="패스트푸드점">패스트푸드점</button>
-        <button class="servicecode" value="치킨전문점">치킨전문점</button>
-        <button class="servicecode" value="분식전문점">분식전문점</button>
-        <button class="servicecode" value="호프/간이주점">호프/간이주점</button>
-        <button class="servicecode" value="커피/음료">커피/음료</button>
+        <button class="servicecode" value="한식음식점" onclick="bringClickValue(this);">한식음식점</button>
+        <button class="servicecode" value="일식음식점" onclick="bringClickValue(this);">일식음식점</button>
+        <button class="servicecode" value="중식음식점" onclick="bringClickValue(this);">중식음식점</button>
+        <button class="servicecode" value="제과점" onclick="bringClickValue(this);">제과점</button>
+        <button class="servicecode" value="패스트푸드점" onclick="bringClickValue(this);">패스트푸드점</button>
+        <button class="servicecode" value="치킨전문점" onclick="bringClickValue(this);">치킨전문점</button>
+        <button class="servicecode" value="분식전문점" onclick="bringClickValue(this);">분식전문점</button>
+        <button class="servicecode" value="호프/간이주점" onclick="bringClickValue(this);">호프/간이주점</button>
+        <button class="servicecode" value="커피/음료" onclick="bringClickValue(this);">커피/음료</button>
     </section>
-    <div class="clickreport">
+
+        <div class="clickreport">
         <button onclick="clickReport(); showReportHead()" id="report">분석하기</button>
-    </div>
-        <div class="reload">
         <button id="reload" >새로고침</button>
     </div>
 </div>
 </div>
 
-
-<div id="map" style="width:100%;height:700px;"></div>
+<div id="map" style="width:100%;height:700px;">
 <!-- position:relative;overflow:hidden; -->
 <div class="ResultReport" style="display: none" >
    <!--분석 리포트 띄우는 창 !  -->
@@ -72,21 +68,90 @@
         <br>
         <span>상권이름:</span>
         <span id="reportHeadsgName"></span>
+        <br>
+        <span>요식업종:</span>
+        <span id="reportHeadservicecode"></span>
         <span>의 분석 결과입니다. </span>
         <hr>
         <div id="resultpopulation"></div>
     </div>
-    <div id="ResultReport0">분석 리포트 입니다  </div>
-    <canvas id="myChart" width="height:30vh; width:50vw"></canvas>
-    <canvas id="myChart1" width="height:30vh; width:50vw"></canvas>
-
+    <div class="ResultReport0">
+        <div class="chart-wrap" >
+            <div class="reporttitle">업종 분석</div>
+            <canvas id="점포수" ></canvas>
+            <canvas id="프랜차이즈" width="height:10vh; width:10vw" ></canvas>
+            <canvas id="개업수" ></canvas>
+            <canvas id="폐업수" ></canvas>
+             <div class="reporttitle">매출 분석</div>
+            <canvas id="요일별매출" ></canvas>
+            <canvas id="시간대별매출" ></canvas>
+            <canvas id="성별매출" width="height:10vh; width:10vw" ></canvas>
+            <canvas id="연령대별매출"></canvas>
+            <div class="reporttitle">인구 분석</div>
+            <canvas id="성별인구" width="height:10vh; width:10vw"></canvas>
+            <canvas id="연령대인구" ></canvas>
+            <canvas id="요일인구"></canvas>
+            <canvas id="시간대인구" ></canvas>
+            <div class="reporttext">총 생활인구는 <span id="totalpopulation"></span>명 입니다. </div>
+            <canvas id="연령대별상주인구" ></canvas>
+             <div class="reporttext">총 상주인구는 <span id="totaldwellingpopulation"></span>명 입니다. </div>
+            <canvas id="연령대별직장인구" ></canvas>
+             <div class="reporttext">총 직장인구는 <span id="totalworkplacepopulation"></span>명 입니다.</div>
+             <div class="reporttitle" id="reportvisitort">주요시설, 집객시설 현황 </div>
+            <div class="reporttext">총 집객시설 수는 <span id="totalvisitorfacilities"></span>개 입니다.</div>
+        </div>
+    </div>
 </div>
-
+</div>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a9792b3125b1c069b26e0cd44dd8c3ed&libraries=clusterer"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+
+
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+<script type="text/javascript" src="/static/elastic/js/gudata.js"></script>
 <script>
+    $(document).ready(function(){
+    $("#searchInput").autocomplete({  //오토 컴플릿트 시작
+         source: List,   // source는 gudata.js파일 내부의 List 배열
+         focus : function(event, ui) { // 방향키로 자동완성단어 선택 가능하게 만들어줌
+            return false;
+         },
+         minLength: 1,// 최소 글자수
+         delay: 100,   //autocomplete 딜레이 시간(ms)
+         //disabled: true, //자동완성 기능 끄기
+      });
+   });
+var servicecode2 = document.getElementsByClassName("servicecode");
+
+function handleClick(event) {
+  console.log(event.target);
+  // console.log(this);
+  // 콘솔창을 보면 둘다 동일한 값이 나온다
+
+  console.log(event.target.classList);
+
+  if (event.target.classList[1] === "clicked") {
+    event.target.classList.remove("clicked");
+  } else {
+    for (var i = 0; i < servicecode2.length; i++) {
+        servicecode2[i].classList.remove("clicked");
+    }
+
+    event.target.classList.add("clicked");
+  }
+}
+
+function init() {
+  for (var i = 0; i < servicecode2.length; i++) {
+    servicecode2[i].addEventListener("click", handleClick);
+  }
+}
+
+init();
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -96,22 +161,10 @@ function getParameterByName(name) {
 var urlguname = getParameterByName('guName');
 
 
-    //분석 리포트 띄우기
-{#fetch('http://127.0.0.1:8000/population/?cCode=선일여고')#}
-{#  .then(res => res.json())#}
-{#  .then(res => {#}
-{#      console.log(res["상권-생활인구"]);#}
-{#      document.getElementById("resultpopulation").innerHTML = res["상권-생활인구"]["금요일_생활인구_수"];#}
-{##}
-{#    //cconsole.log(`${res.상권-생활인구[0]}`);// data를 응답 받은 후의 로직#}
-{#  });#}
-function clickReport(){
-    if($('.ResultReport').css('display')== 'none'){
-        $('.ResultReport').show();
-    }else{
-        $('.ResultReport').hide();
-    }
-}
+let thislink = "http://127.0.0.1:8000/test/?cCode=%EC%97%B0%EC%8B%A0%EB%82%B4%EC%97%AD&serviceCode=%EB%B6%84%EC%8B%9D%EC%A0%84%EB%AC%B8%EC%A0%90"
+
+
+
 
  function panTo(lat,lng) {
             // 이동할 위도 경도 위치를 생성합니다
@@ -137,6 +190,8 @@ function showReportHead(){
     sg.innerHTML = reportsg;
     let sgname = document.getElementById('reportHeadsgName');
     sgname.innerHTML = reportsgName;
+    let serviceCode = document.getElementById('reportHeadservicecode')
+   serviceCode.innerHTML =service;
 }
 function showguSearch(){
     let Guname = document.getElementById('selectArea');
@@ -164,11 +219,16 @@ function showCommercialArea(CommercialArea){
 
 
 }
+
+
+
 function showCommercialAreaName(CommercialAreaName){
     reportsgName = CommercialAreaName;
     let sgName = document.getElementById('cA2');
     sgName.innerHTML =CommercialAreaName ;
-    history.pushState(null, null, '?cCode='+reportsgName+'&serviceCode='+reportsg) // 리로드 없이 주소창 변경하기
+    history.pushState(null, null, '?cCode='+reportsgName+'&serviceCode='+service) // 리로드 없이 주소창 변경하기
+    var link =  document.location.href;
+
 }
 
 
@@ -176,23 +236,30 @@ function showCommercialAreaName(CommercialAreaName){
         center : new kakao.maps.LatLng(37.564214, 127.001699), // 지도의 중심좌표
         level :8  // 지도의 확대 레벨 , 8로 설정해야 서울시를 한눈에 보기 편함
     }); // 지도를 생성합니다
+    let service;
+    function bringClickValue(arg0){
+        var value = $(arg0).val();
+        service =value;
+        history.pushState(null, null, '?cCode='+reportsgName+'&serviceCode='+service)
 
-    let service ;
-    $(document).ready(function() {
-     $('.servicecode').on("click", function() {     //버튼 클릭시 호출되는 함수
-           $(this).addClass('active');      //클릭된 버튼에 속성(class 추가)
-           $(this).attr("disabled", true);
-           service=($(this).val());//클릭된 버튼의 value 값
-           $('.selectedArea').after(service);
-     });
-    });
-      $('.reload').on("click",function(){
+    }
+
+    {#let service ;#}
+    {#$(document).ready(function() {#}
+    {# $('.servicecode').on("click", function() {     //버튼 클릭시 호출되는 함수#}
+    {#       $(this).addClass('active');      //클릭된 버튼에 속성(class 추가)#}
+    {#       $(this).attr("disabled", true);#}
+    {#       service=($(this).val());//클릭된 버튼의 value 값#}
+    {#       $('.selectedArea').after(service);#}
+    {# });#}
+
+      $('#reload').on("click",function(){
         location.reload();
         window.location = "http://127.0.0.1:8000/index/";
 
     })
     $('.clickreport').attr("disabled", true);
-console.log(service);
+
 
 // 커스텀 오버레이에 표시할 내용입니다
 // HTML 문자열 또는 Dom Element 입니다
@@ -231,6 +298,28 @@ $.getJSON('http://127.0.0.1:8000/map/', function(data){
     })
     console.log(aJsonArray);
 
+    function show(){ //검색창에 입력시 이동
+
+    let text = document.getElementsByClassName("searchInput")[0].value;
+
+    let res = aJsonArray.find((element) => {
+        return element.gu === text;
+    });
+    let lat = res.lat;
+    let lng = res.lng;
+    console.log(res);
+
+    showgu(res.gu);
+
+    let Guname = document.getElementById('selectArea');
+        reportGuname = res.gu;
+        //Guname.innerHTML = gu;
+
+    panTo(lat,lng);
+    DrawPolygon();
+    DrawPolygon2();
+}
+document.getElementById("search_btn").addEventListener("click",show);
 
      $.each(aJsonArray, function (index, item) //for 문 index- 0,1,2,,, item- {lat, lng, gu}
     {
@@ -378,59 +467,30 @@ $.getJSON('http://127.0.0.1:8000/map/', function(data){
             polygon.setMap(map);
         }
 let Data;
-// 지도에 다각형을 표시합니다
 
+//const urlParameter = window.location.search; // 현재 url 가져옴
 
-{#var chartArea = document.getElementById('myChart').getContext('2d');#}
-{#// 차트를 생성한다.#}
-{#var myChart = new Chart(chartArea, {#}
-{#    // ①차트의 종류(String)#}
-{#    type: 'bar',#}
-{#    // ②차트의 데이터(Object)#}
-{#    data: {#}
-{#        // ③x축에 들어갈 이름들(Array)#}
-{#        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],#}
-{#        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.#}
-{#        datasets: [{#}
-{#            // ⑤dataset의 이름(String)#}
-{#            label: '# of Votes',#}
-{#            // ⑥dataset값(Array)#}
-{#            data: [12, 19, 3, 5, 2, 3],#}
-{#            // ⑦dataset의 배경색(rgba값을 String으로 표현)#}
-{#            backgroundColor: 'rgba(255, 99, 132, 0.2)',#}
-{#            // ⑧dataset의 선 색(rgba값을 String으로 표현)#}
-{#            borderColor: 'rgba(255, 99, 132, 1)',#}
-{#            // ⑨dataset의 선 두께(Number)#}
-{#            borderWidth: 1#}
-{#        }]#}
-{#    },#}
-{#    // ⑩차트의 설정(Object)#}
-{#    options: {#}
-{#        responsive: false,#}
-{#        // ⑪축에 관한 설정(Object)#}
-{#        scales: {#}
-{#            // ⑫y축에 대한 설정(Object)#}
-{#            y: {#}
-{#                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)#}
-{#                beginAtZero: true#}
-{#            }#}
-{#        }#}
-{#    }#}
-{# });#}
-// url = https://gillog/post/1?tag=javascript&like=backend
-const urlParameter = window.location.search; // 현재 url 가져옴
+// 분석하기 버튼 클릭했을 시 차트 띄우기
+function clickReport(){
+    var link =  document.location.href;
+    var result = link.replace('index', 'test');
+    thislink =result;
+    console.log(thislink);
+    if($('.ResultReport').css('display')== 'none'){
+        $('.ResultReport').show();
+    }else{
+        $('.ResultReport').hide();
+    }
 
-// ?tag=javascript&like=backend
-//console.log(urlParameter);
-fetch('http://127.0.0.1:8000/test/?cCode=%EA%B5%AC%EC%9D%98%EC%82%AC%EA%B1%B0%EB%A6%AC&serviceCode=%EB%B6%84%EC%8B%9D%EC%A0%84%EB%AC%B8%EC%A0%90')
+fetch(thislink)
   .then(res => res.json())
   .then(res => {
 //막대 그래프
-var chartArea = document.getElementById('myChart').getContext('2d');
+var chartArea = document.getElementById('점포수').getContext('2d');
 // 차트를 생성한다.
 var myChart = new Chart(chartArea, {
     // ①차트의 종류(String)
-    type: 'bar',
+    type: 'line',
     // ②차트의 데이터(Object)
     data: {
         // ③x축에 들어갈 이름들(Array)
@@ -438,7 +498,7 @@ var myChart = new Chart(chartArea, {
         // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.
         datasets: [{
             // ⑤dataset의 이름(String)
-            label: '# of Votes',
+            label: '분기 별 점포수',
             // ⑥dataset값(Array)
             data: res["점포수"].data,
             // ⑦dataset의 배경색(rgba값을 String으로 표현)
@@ -451,6 +511,7 @@ var myChart = new Chart(chartArea, {
     },
     // ⑩차트의 설정(Object)
     options: {
+        maintainAspectRatio :false,
         responsive: false,
         // ⑪축에 관한 설정(Object)
         scales: {
@@ -462,8 +523,8 @@ var myChart = new Chart(chartArea, {
         }
     }
 });
-//파이차트
-var chartArea1 = document.getElementById('myChart1').getContext('2d');
+//프랜차이즈와 일반점포 비율 파이차트
+var chartArea1 = document.getElementById('프랜차이즈').getContext('2d');
 var myChart1 = new Chart(chartArea1, {
     // ①차트의 종류(String)
     type: 'pie',
@@ -499,7 +560,502 @@ var myChart1 = new Chart(chartArea1, {
         }
     }
 });
+// 개업수 막대그래프
+var chartArea2 = document.getElementById('개업수').getContext('2d');
+var myChart2 = new Chart(chartArea2, {
+    // ①차트의 종류(String)
+    type: 'bar',
+    // ②차트의 데이터(Object)
+    data: {
+        // ③x축에 들어갈 이름들(Array)
+        labels: res["개업수"].label,
+        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.
+        datasets: [{
+            // ⑤dataset의 이름(String)
+            label: '개업수',
+            // ⑥dataset값(Array)
+            data: res["개업수"].data,
+            // ⑦dataset의 배경색(rgba값을 String으로 표현)
+             backgroundColor: ['#28c3d7', '#FF6384'],
+
+            // ⑧dataset의 선 색(rgba값을 String으로 표현)
+            borderColor: 'rgb(234,33,33)',
+            // ⑨dataset의 선 두께(Number)
+            borderWidth: 1
+        }]
+    },
+    // ⑩차트의 설정(Object)
+    options: {
+        responsive: false,
+        // ⑪축에 관한 설정(Object)
+        scales: {
+            // ⑫y축에 대한 설정(Object)
+            y: {
+                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)
+                beginAtZero: true
+            }
+        }
+    }
 });
+//폐업수 막대그래프
+var chartArea3 = document.getElementById('폐업수').getContext('2d');
+var myChart3 = new Chart(chartArea3, {
+    // ①차트의 종류(String)
+    type: 'bar',
+    // ②차트의 데이터(Object)
+    data: {
+        // ③x축에 들어갈 이름들(Array)
+        labels: res["폐업수"].label,
+        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.
+        datasets: [{
+            // ⑤dataset의 이름(String)
+            label: '폐업수',
+            // ⑥dataset값(Array)
+            data: res["폐업수"].data,
+            // ⑦dataset의 배경색(rgba값을 String으로 표현)
+             backgroundColor: ['#28c3d7', '#FF6384'],
+
+            // ⑧dataset의 선 색(rgba값을 String으로 표현)
+            borderColor: 'rgb(234,33,33)',
+            // ⑨dataset의 선 두께(Number)
+            borderWidth: 1
+        }]
+    },
+    // ⑩차트의 설정(Object)
+    options: {
+        responsive: false,
+        // ⑪축에 관한 설정(Object)
+        scales: {
+            // ⑫y축에 대한 설정(Object)
+            y: {
+                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)
+                beginAtZero: true
+            }
+        }
+    }
+});
+//요일별 매출 막대그래프
+
+var chartArea4 = document.getElementById('요일별매출').getContext('2d');
+var myChart4 = new Chart(chartArea4, {
+    // ①차트의 종류(String)
+    type: 'bar',
+
+    // ②차트의 데이터(Object)
+    data: {
+        // ③x축에 들어갈 이름들(Array)
+        labels: res["매출-요일별"].label,
+        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.
+        datasets: [{
+            // ⑤dataset의 이름(String)
+            label: '매출-요일별',
+            // ⑥dataset값(Array)
+            data: res["매출-요일별"].data,
+            // ⑦dataset의 배경색(rgba값을 String으로 표현)
+             backgroundColor: ['#28c3d7', '#FF6384','#fde288','#db3545'],
+
+            // ⑧dataset의 선 색(rgba값을 String으로 표현)
+            borderColor: 'rgb(234,33,33)',
+            // ⑨dataset의 선 두께(Number)
+            borderWidth: 1
+        }]
+    },
+    // ⑩차트의 설정(Object)
+    options: {
+        responsive: false,
+
+        },
+        // ⑪축에 관한 설정(Object)
+        scales: {
+            // ⑫y축에 대한 설정(Object)
+          y: {
+                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)
+                beginAtZero: true
+            }
+        }
+
+
+});
+//매출 시간대별 막대그래프
+var chartArea5 = document.getElementById('시간대별매출').getContext('2d');
+// 차트를 생성한다.
+var myChart5 = new Chart(chartArea5, {
+    // ①차트의 종류(String)
+    type: 'line',
+    // ②차트의 데이터(Object)
+    data: {
+        // ③x축에 들어갈 이름들(Array)
+        labels: res["매출-시간대별"].label,
+        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.
+        datasets: [{
+            // ⑤dataset의 이름(String)
+            label: '# 시간대별 매출',
+            // ⑥dataset값(Array)
+            data: res["매출-시간대별"].data,
+            // ⑦dataset의 배경색(rgba값을 String으로 표현)
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            // ⑧dataset의 선 색(rgba값을 String으로 표현)
+            borderColor: 'rgba(255, 99, 132, 1)',
+            // ⑨dataset의 선 두께(Number)
+            borderWidth: 1
+        }]
+    },
+
+    // ⑩차트의 설정(Object)
+    options: {
+        responsive: false,
+
+        },
+        // ⑪축에 관한 설정(Object)
+        scales: {
+            // ⑫y축에 대한 설정(Object)
+            y: {
+                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)
+                beginAtZero: true
+            }
+        }
+
+});
+//성별 매출 -> 파이차트
+var chartArea6 = document.getElementById('성별매출').getContext('2d');
+var myChart6 = new Chart(chartArea6, {
+    // ①차트의 종류(String)
+    type: 'pie',
+    // ②차트의 데이터(Object)
+    data: {
+        // ③x축에 들어갈 이름들(Array)
+        labels: res["매출-성별"].label,
+        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.
+        datasets: [{
+            // ⑤dataset의 이름(String)
+            label: '매출-성별',
+            // ⑥dataset값(Array)
+            data: res["매출-성별"].data,
+            // ⑦dataset의 배경색(rgba값을 String으로 표현)
+             backgroundColor: ['#28c3d7', '#FF6384'],
+
+            // ⑧dataset의 선 색(rgba값을 String으로 표현)
+            borderColor: 'rgb(234,33,33)',
+            // ⑨dataset의 선 두께(Number)
+            borderWidth: 1
+        }]
+    },
+    // ⑩차트의 설정(Object)
+    options: {
+        responsive: false,
+        // ⑪축에 관한 설정(Object)
+        scales: {
+            // ⑫y축에 대한 설정(Object)
+            y: {
+                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)
+                beginAtZero: true
+            }
+        }
+    }
+});
+// 연령대별 매출 - 막대 차트
+var chartArea7 = document.getElementById('연령대별매출').getContext('2d');
+var myChart7 = new Chart(chartArea7, {
+    // ①차트의 종류(String)
+    type: 'bar',
+
+    // ②차트의 데이터(Object)
+    data: {
+        // ③x축에 들어갈 이름들(Array)
+        labels: res["매출-연령대별"].label,
+        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.
+        datasets: [{
+            // ⑤dataset의 이름(String)
+            label: '매출-연령대별',
+            // ⑥dataset값(Array)
+            data: res["매출-연령대별"].data,
+            // ⑦dataset의 배경색(rgba값을 String으로 표현)
+             backgroundColor: ['#28c3d7', '#FF6384','#fde288','#db3545'],
+
+            // ⑧dataset의 선 색(rgba값을 String으로 표현)
+            borderColor: 'rgb(234,33,33)',
+            // ⑨dataset의 선 두께(Number)
+            borderWidth: 1
+        }]
+    },
+    // ⑩차트의 설정(Object)
+    options: {
+        responsive: false,
+
+        },
+        // ⑪축에 관한 설정(Object)
+        scales: {
+            // ⑫y축에 대한 설정(Object)
+
+          y: {
+                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)
+                beginAtZero: true
+            }
+        }
+
+
+});
+//성별 인구 -> 파이차트
+var chartArea8 = document.getElementById('성별인구').getContext('2d');
+var myChart8 = new Chart(chartArea8, {
+    // ①차트의 종류(String)
+    type: 'pie',
+    // ②차트의 데이터(Object)
+    data: {
+        // ③x축에 들어갈 이름들(Array)
+        labels: res["유동-성별"].label,
+        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.
+        datasets: [{
+            // ⑤dataset의 이름(String)
+            label: '유동-성별',
+            // ⑥dataset값(Array)
+            data: res["유동-성별"].data,
+            // ⑦dataset의 배경색(rgba값을 String으로 표현)
+             backgroundColor: ['#28c3d7', '#FF6384'],
+
+            // ⑧dataset의 선 색(rgba값을 String으로 표현)
+            borderColor: 'rgb(234,33,33)',
+            // ⑨dataset의 선 두께(Number)
+            borderWidth: 1
+        }]
+    },
+    // ⑩차트의 설정(Object)
+    options: {
+        responsive: false,
+        // ⑪축에 관한 설정(Object)
+        scales: {
+            // ⑫y축에 대한 설정(Object)
+            y: {
+                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+// 연령대별 인구  - 막대 차트
+var chartArea9 = document.getElementById('연령대인구').getContext('2d');
+var myChart9 = new Chart(chartArea9, {
+    // ①차트의 종류(String)
+    type: 'bar',
+
+    // ②차트의 데이터(Object)
+    data: {
+        // ③x축에 들어갈 이름들(Array)
+        labels: res["유동-연령대별"].label,
+        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.
+        datasets: [{
+            // ⑤dataset의 이름(String)
+            label: '유동-연령대별',
+            // ⑥dataset값(Array)
+            data: res["유동-연령대별"].data,
+            // ⑦dataset의 배경색(rgba값을 String으로 표현)
+             backgroundColor: ['#28c3d7', '#FF6384','#fde288','#db3545'],
+
+            // ⑧dataset의 선 색(rgba값을 String으로 표현)
+            borderColor: 'rgb(234,33,33)',
+            // ⑨dataset의 선 두께(Number)
+            borderWidth: 1
+        }]
+    },
+    // ⑩차트의 설정(Object)
+    options: {
+        responsive: false,
+
+        },
+        // ⑪축에 관한 설정(Object)
+        scales: {
+            // ⑫y축에 대한 설정(Object)
+
+          y: {
+                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)
+                beginAtZero: true
+            }
+        }
+
+
+});
+
+// 요일 인구  - 막대 차트
+var chartArea10 = document.getElementById('요일인구').getContext('2d');
+var myChart10 = new Chart(chartArea10, {
+    // ①차트의 종류(String)
+    type: 'bar',
+
+    // ②차트의 데이터(Object)
+    data: {
+        // ③x축에 들어갈 이름들(Array)
+        labels: res["유동-요일별"].label,
+        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.
+        datasets: [{
+            // ⑤dataset의 이름(String)
+            label: '유동-요일별',
+            // ⑥dataset값(Array)
+            data: res["유동-요일별"].data,
+            // ⑦dataset의 배경색(rgba값을 String으로 표현)
+             backgroundColor: ['#28c3d7', '#FF6384','#fde288','#db3545'],
+
+            // ⑧dataset의 선 색(rgba값을 String으로 표현)
+            borderColor: 'rgb(234,33,33)',
+            // ⑨dataset의 선 두께(Number)
+            borderWidth: 1
+        }]
+    },
+    // ⑩차트의 설정(Object)
+    options: {
+        responsive: false,
+
+        },
+        // ⑪축에 관한 설정(Object)
+        scales: {
+            // ⑫y축에 대한 설정(Object)
+
+          y: {
+                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)
+                beginAtZero: true
+            }
+        }
+
+
+});
+//매출 시간대별 막대그래프
+var chartArea11 = document.getElementById('시간대인구').getContext('2d');
+// 차트를 생성한다.
+var myChart11 = new Chart(chartArea11, {
+    // ①차트의 종류(String)
+    type: 'line',
+    // ②차트의 데이터(Object)
+    data: {
+        // ③x축에 들어갈 이름들(Array)
+        labels: res["유동-시간대별"].label,
+        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.
+        datasets: [{
+            // ⑤dataset의 이름(String)
+            label: '유동-시간대별',
+            // ⑥dataset값(Array)
+            data: res["유동-시간대별"].data,
+            // ⑦dataset의 배경색(rgba값을 String으로 표현)
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            // ⑧dataset의 선 색(rgba값을 String으로 표현)
+            borderColor: 'rgba(255, 99, 132, 1)',
+            // ⑨dataset의 선 두께(Number)
+            borderWidth: 1
+        }]
+    },
+
+    // ⑩차트의 설정(Object)
+    options: {
+        responsive: false,
+
+        },
+        // ⑪축에 관한 설정(Object)
+        scales: {
+            // ⑫y축에 대한 설정(Object)
+            y: {
+                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)
+                beginAtZero: true
+            }
+        }
+
+});
+var totalpopulation = document.getElementById('totalpopulation');
+totalpopulation.innerHTML = res["유동-총"];
+
+// 연령대별상주인구  - 막대 차트
+var chartArea12 = document.getElementById('연령대별상주인구').getContext('2d');
+var myChart12 = new Chart(chartArea12, {
+    // ①차트의 종류(String)
+    type: 'bar',
+
+    // ②차트의 데이터(Object)
+    data: {
+        // ③x축에 들어갈 이름들(Array)
+        labels: res["주거-연령대별"].label,
+        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.
+        datasets: [{
+            // ⑤dataset의 이름(String)
+            label: '주거-연령대별',
+            // ⑥dataset값(Array)
+            data: res["주거-연령대별"].data,
+            // ⑦dataset의 배경색(rgba값을 String으로 표현)
+             backgroundColor: ['#28c3d7', '#FF6384','#fde288','#db3545'],
+
+            // ⑧dataset의 선 색(rgba값을 String으로 표현)
+            borderColor: 'rgb(234,33,33)',
+            // ⑨dataset의 선 두께(Number)
+            borderWidth: 1
+        }]
+    },
+    // ⑩차트의 설정(Object)
+    options: {
+        responsive: false,
+
+        },
+        // ⑪축에 관한 설정(Object)
+        scales: {
+            // ⑫y축에 대한 설정(Object)
+
+          y: {
+                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)
+                beginAtZero: true
+            }
+        }
+
+
+});
+var totaldwellingpopulation = document.getElementById('totaldwellingpopulation');
+totaldwellingpopulation.innerHTML = res["주거-총"];
+
+// 연령대별상주인구  - 막대 차트
+var chartArea13 = document.getElementById('연령대별직장인구').getContext('2d');
+var myChart13 = new Chart(chartArea13, {
+    // ①차트의 종류(String)
+    type: 'bar',
+
+    // ②차트의 데이터(Object)
+    data: {
+        // ③x축에 들어갈 이름들(Array)
+        labels: res["직장-연령대별"].label,
+        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.
+        datasets: [{
+            // ⑤dataset의 이름(String)
+            label: '직장-연령대별',
+            // ⑥dataset값(Array)
+            data: res["직장-연령대별"].data,
+            // ⑦dataset의 배경색(rgba값을 String으로 표현)
+             backgroundColor: ['#28c3d7', '#FF6384','#fde288','#db3545'],
+
+            // ⑧dataset의 선 색(rgba값을 String으로 표현)
+            borderColor: 'rgb(234,33,33)',
+            // ⑨dataset의 선 두께(Number)
+            borderWidth: 1
+        }]
+    },
+    // ⑩차트의 설정(Object)
+    options: {
+        responsive: false,
+
+        },
+        // ⑪축에 관한 설정(Object)
+        scales: {
+            // ⑫y축에 대한 설정(Object)
+
+          y: {
+                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)
+                beginAtZero: true
+            }
+        }
+
+
+});
+var totalworkplacepopulation = document.getElementById('totalworkplacepopulation');
+totalworkplacepopulation.innerHTML = res["직장-총"];
+
+var totalvisitorfacilities = document.getElementById('totalvisitorfacilities');
+totalvisitorfacilities.innerHTML = res["집객시설수"];
+
+});}
 </script>
+
 </body>
 </html>

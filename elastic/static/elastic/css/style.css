@@ -7,20 +7,28 @@
     *{
         font-family: DalseoHealingBold;
     }
+    body{
+        height: 100%;
+    }
     #map{
         z-index: 1;
     }
-    h1{
-        background-color: rgba(205, 226, 235, 1);
+    #title{
+        background-color: rgb(133, 197, 225);
+        font-size: 40px;
+        text-align: center;
+        /*border-style: solid;*/
+        /*border-color: #e0e0fd;*/
     }
     .map_wrap{
         font-size:20px;
         position: absolute;
         left: 9px;
-        width: 20%;
+        width: 25%;
         height: 70%;
         z-index: 2;
         background-color: #93C6D5E5;
+        margin-bottom: 10%;
     }
 
     #menu_wrap{
@@ -29,37 +37,78 @@
         text-align: center;
 
     }
-    .search, .selectedArea, .service{
-        margin-bottom: 5%;
 
 
+      #searchInput {
+        padding: 0;
+        background: #ffffff;
+        border: #78b2c4e5;
+        outline: none;
+        font-size: 15px;
+        line-height: 40px;
+        margin: 20px 0px 20px 0px;
+      }
+    #search_btn {
+        width: 50px;
+        height: 40px;
+
     }
-    .selectedArea{
-        display: flex; /* 이건 삭제하기 !  */
-        background-color: aliceblue;
-        border-radius: 20px;
-        margin-left: 2%;
-        margin-right: 2%;
-    }
-    .servicecode.active{
-    background-color: #eeeeee;
-     color: rgb(30, 15, 242);
+    #selectedArea, #commercialArea, #commercialAreaName{
+        margin-bottom: 3%;
+
     }
 
-    .servicecode{
-    background-color: white;
-    color: black;
+
+    .service {
+        margin: -4px 0 0 -2px;
+        margin-top: 1%;
     }
+
+
+
+   .servicecode {
+        border: 1px solid;
+        width: 100px;
+        height: 40px;
+        margin: 10px 5px 0px 0px;
+        justify-content: center;
+        border-radius: 5px;
+        font-size : 14.8px;
+        background-color:rgb(255, 255, 255); border-color:rgba(0, 0, 255, 0); color:rgb(0, 0, 0)
+   }
+   .clicked {
+        color: rgb(73, 104, 238);
+   }
 
     .clickreport{
-        background-color: rgba(205, 226, 235, 1);
+        background-color: rgba(205, 226, 235, 0);
         border-style: none;
-        width: 50%;
-        font-size: 25px;
+        width: 100%;
         margin-top: 10%;
-
-
+        margin-bottom: 100%;
+        margin: 15px 0px 0px 0px;
     }
+      #report, #reload{
+        border: 2px solid;
+        width: 100px;
+        height: 40px;
+        margin: 10px 10px 0px 0px;
+        justify-content: center;
+        border-radius: 5px;
+        font-size : 14.8px;
+        background-color:rgba(131, 159, 236, 0.799); border-color:rgb(120, 120, 216); color:rgb(7, 10, 14)
+    }
+
+
+    /*.clickreport{*/
+    /*    background-color: rgba(205, 226, 235, 1);*/
+    /*    border-style: none;*/
+    /*    width: 50%;*/
+    /*    font-size: 25px;*/
+    /*    margin-top: 10%;*/
+
+
+    /*}*/
 
 
  /*    .label {margin-bottom: 96px;}
@@ -89,19 +138,55 @@
 }
 
 
+
 .ResultReport{
     position :absolute ;
-    top: 11%;
-    left: 60%;
+    overflow: auto;
+    left: 55%;
     font-size:30px;
-    width: 80%;
-    height: 90%;
+    width: 700px;
+    height: 100%;
     z-index: 2;
-    background-color: #fde288;
+    background-color: #ffffff;
+
 }
 .ResultReportNone{
     display:none;
 }
 .ReportHead{
     font-size:20px;
+}
+.reporttext{
+    font-size:18px;
+    text-decoration: underline;
+
+    margin-bottom: 1%;
+}
+#reportvisitort{
+    margin-left:3%;
+}
+.reporttitle{
+    font-size:28px;
+    text-decoration: underline;
+    text-decoration-style: solid;
+    text-decoration-color: blue;
+    text-decoration-thickness: 4px;
+
+    margin-bottom: 1%;
+
+}
+.chart-wrap{
+
+    /*width: 300px;*/
+    text-align: center;
+
+    /*transform: translate(10%, 0%);*/
+}
+canvas{
+
+    width: 500px;
+    height: 300px;
+
+    margin-bottom: 5%;
+    background-color: #ffffff;
 }
