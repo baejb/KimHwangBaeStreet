@@ -157,36 +157,49 @@
     font-size:20px;
 }
 .reporttext{
-    font-size:18px;
-    text-decoration: underline;
+    font-size:20px;
 
-    margin-bottom: 1%;
+    margin-right: 15%;
+    margin-bottom: 3%;
 }
-#reportvisitort{
-    margin-left:3%;
-}
+
 .reporttitle{
+
+    text-align: center;
     font-size:28px;
     text-decoration: underline;
     text-decoration-style: solid;
     text-decoration-color: blue;
     text-decoration-thickness: 4px;
 
-    margin-bottom: 1%;
+    margin-bottom: 2%;
 
 }
 .chart-wrap{
+   text-align: center;
 
-    /*width: 300px;*/
-    text-align: center;
-
-    /*transform: translate(10%, 0%);*/
 }
 canvas{
-
+    text-align: center;
     width: 500px;
     height: 300px;
-
-    margin-bottom: 5%;
     background-color: #ffffff;
+}
+hr {
+  height: 3px;
+  background-color: blue;
+}
+.reportexplain{
+    font-size:18px;
+    margin-bottom: 5%;
+    margin-right: 15%;
+}
+.chart{
+    margin-left: 15%;
+}
+.piechart{
+    margin-left: 15%;
+}
+#reportend0, #reportend1{
+    margin-left: 15%;
 }
