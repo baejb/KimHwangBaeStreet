@@ -75,13 +75,22 @@
     </div>
     <div class="ResultReport0">분석 리포트 입니다
         <div class="chart-wrap">
+            <h4>업종 분석</h4>
             <canvas id="점포수" width="height:30vh; width:50vw"></canvas>
             <canvas id="프랜차이즈" width="height:10vh; width:10vw"></canvas>
             <canvas id="개업수" width="height:30vh; width:50vw"></canvas>
             <canvas id="폐업수" width="height:30vh; width:50vw"></canvas>
-
+             <h4>매출 분석</h4>
             <canvas id="요일별매출" width="height:30vh; width:50vw"></canvas>
             <canvas id="시간대별매출" width="height:30vh; width:50vw"></canvas>
+            <canvas id="성별매출" width="height:30vh; width:50vw"></canvas>
+            <canvas id="연령대별매출" width="height:30vh; width:50vw"></canvas>
+            <h4>인구 분석</h4>
+            <canvas id="성별인구" width="height:30vh; width:50vw"></canvas>
+            <canvas id="연령대인구" width="height:30vh; width:50vw"></canvas>
+            <canvas id="요일인구" width="height:30vh; width:50vw"></canvas>
+            <canvas id="시간대인구" width="height:30vh; width:50vw"></canvas>
+            <div>총 생활인구는 <span id="totalpopulation"></span>명 입니다. </div>
         </div>
     </div>
 </div>
@@ -91,10 +100,9 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 <script type="text/javascript" src="/static/elastic/js/gudata.js"></script>
 <script>
@@ -458,7 +466,7 @@ var myChart = new Chart(chartArea, {
         // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.
         datasets: [{
             // ⑤dataset의 이름(String)
-            label: '# of Votes',
+            label: '분기 별 점포수',
             // ⑥dataset값(Array)
             data: res["점포수"].data,
             // ⑦dataset의 배경색(rgba값을 String으로 표현)
@@ -637,13 +645,13 @@ var myChart4 = new Chart(chartArea4, {
             }
         }
 
+
 });
 //매출 시간대별 막대그래프
 var chartArea5 = document.getElementById('시간대별매출').getContext('2d');
 // 차트를 생성한다.
 var myChart5 = new Chart(chartArea5, {
     // ①차트의 종류(String)
-    plugins:[ChartDataLabels],
     type: 'line',
     // ②차트의 데이터(Object)
     data: {
@@ -663,17 +671,49 @@ var myChart5 = new Chart(chartArea5, {
             borderWidth: 1
         }]
     },
+
     // ⑩차트의 설정(Object)
     options: {
         responsive: false,
-        plugins:{
-            datalabels:{
-                formatter:function(value,context){
-                    var idx = context.dataIndex;
-                    return context.chart.data.labels[idx]+ ' ' +addComma(value)+ (idx==0 ? '원' : 'P');
-                }
-            }
+
         },
+        // ⑪축에 관한 설정(Object)
+        scales: {
+            // ⑫y축에 대한 설정(Object)
+            y: {
+                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)
+                beginAtZero: true
+            }
+        }
+
+});
+//성별 매출 -> 파이차트
+var chartArea6 = document.getElementById('성별매출').getContext('2d');
+var myChart6 = new Chart(chartArea6, {
+    // ①차트의 종류(String)
+    type: 'pie',
+    // ②차트의 데이터(Object)
+    data: {
+        // ③x축에 들어갈 이름들(Array)
+        labels: res["매출-성별"].label,
+        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.
+        datasets: [{
+            // ⑤dataset의 이름(String)
+            label: '매출-성별',
+            // ⑥dataset값(Array)
+            data: res["매출-성별"].data,
+            // ⑦dataset의 배경색(rgba값을 String으로 표현)
+             backgroundColor: ['#28c3d7', '#FF6384'],
+
+            // ⑧dataset의 선 색(rgba값을 String으로 표현)
+            borderColor: 'rgb(234,33,33)',
+            // ⑨dataset의 선 두께(Number)
+            borderWidth: 1
+        }]
+    },
+    // ⑩차트의 설정(Object)
+    options: {
+        responsive: false,
         // ⑪축에 관한 설정(Object)
         scales: {
             // ⑫y축에 대한 설정(Object)
@@ -684,6 +724,214 @@ var myChart5 = new Chart(chartArea5, {
         }
     }
 });
+// 연령대별 매출 - 막대 차트
+var chartArea7 = document.getElementById('연령대별매출').getContext('2d');
+var myChart7 = new Chart(chartArea7, {
+    // ①차트의 종류(String)
+    type: 'bar',
+
+    // ②차트의 데이터(Object)
+    data: {
+        // ③x축에 들어갈 이름들(Array)
+        labels: res["매출-연령대별"].label,
+        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.
+        datasets: [{
+            // ⑤dataset의 이름(String)
+            label: '매출-연령대별',
+            // ⑥dataset값(Array)
+            data: res["매출-연령대별"].data,
+            // ⑦dataset의 배경색(rgba값을 String으로 표현)
+             backgroundColor: ['#28c3d7', '#FF6384','#fde288','#db3545'],
+
+            // ⑧dataset의 선 색(rgba값을 String으로 표현)
+            borderColor: 'rgb(234,33,33)',
+            // ⑨dataset의 선 두께(Number)
+            borderWidth: 1
+        }]
+    },
+    // ⑩차트의 설정(Object)
+    options: {
+        responsive: false,
+
+        },
+        // ⑪축에 관한 설정(Object)
+        scales: {
+            // ⑫y축에 대한 설정(Object)
+
+          y: {
+                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)
+                beginAtZero: true
+            }
+        }
+
+
+});
+//성별 인구 -> 파이차트
+var chartArea8 = document.getElementById('성별인구').getContext('2d');
+var myChart8 = new Chart(chartArea8, {
+    // ①차트의 종류(String)
+    type: 'pie',
+    // ②차트의 데이터(Object)
+    data: {
+        // ③x축에 들어갈 이름들(Array)
+        labels: res["유동-성별"].label,
+        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.
+        datasets: [{
+            // ⑤dataset의 이름(String)
+            label: '유동-성별',
+            // ⑥dataset값(Array)
+            data: res["유동-성별"].data,
+            // ⑦dataset의 배경색(rgba값을 String으로 표현)
+             backgroundColor: ['#28c3d7', '#FF6384'],
+
+            // ⑧dataset의 선 색(rgba값을 String으로 표현)
+            borderColor: 'rgb(234,33,33)',
+            // ⑨dataset의 선 두께(Number)
+            borderWidth: 1
+        }]
+    },
+    // ⑩차트의 설정(Object)
+    options: {
+        responsive: false,
+        // ⑪축에 관한 설정(Object)
+        scales: {
+            // ⑫y축에 대한 설정(Object)
+            y: {
+                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+// 연령대별 인구  - 막대 차트
+var chartArea9 = document.getElementById('연령대인구').getContext('2d');
+var myChart9 = new Chart(chartArea9, {
+    // ①차트의 종류(String)
+    type: 'bar',
+
+    // ②차트의 데이터(Object)
+    data: {
+        // ③x축에 들어갈 이름들(Array)
+        labels: res["유동-연령대별"].label,
+        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.
+        datasets: [{
+            // ⑤dataset의 이름(String)
+            label: '유동-연령대별',
+            // ⑥dataset값(Array)
+            data: res["유동-연령대별"].data,
+            // ⑦dataset의 배경색(rgba값을 String으로 표현)
+             backgroundColor: ['#28c3d7', '#FF6384','#fde288','#db3545'],
+
+            // ⑧dataset의 선 색(rgba값을 String으로 표현)
+            borderColor: 'rgb(234,33,33)',
+            // ⑨dataset의 선 두께(Number)
+            borderWidth: 1
+        }]
+    },
+    // ⑩차트의 설정(Object)
+    options: {
+        responsive: false,
+
+        },
+        // ⑪축에 관한 설정(Object)
+        scales: {
+            // ⑫y축에 대한 설정(Object)
+
+          y: {
+                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)
+                beginAtZero: true
+            }
+        }
+
+
+});
+
+// 요일 인구  - 막대 차트
+var chartArea10 = document.getElementById('요일인구').getContext('2d');
+var myChart10 = new Chart(chartArea10, {
+    // ①차트의 종류(String)
+    type: 'bar',
+
+    // ②차트의 데이터(Object)
+    data: {
+        // ③x축에 들어갈 이름들(Array)
+        labels: res["유동-요일별"].label,
+        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.
+        datasets: [{
+            // ⑤dataset의 이름(String)
+            label: '유동-요일별',
+            // ⑥dataset값(Array)
+            data: res["유동-요일별"].data,
+            // ⑦dataset의 배경색(rgba값을 String으로 표현)
+             backgroundColor: ['#28c3d7', '#FF6384','#fde288','#db3545'],
+
+            // ⑧dataset의 선 색(rgba값을 String으로 표현)
+            borderColor: 'rgb(234,33,33)',
+            // ⑨dataset의 선 두께(Number)
+            borderWidth: 1
+        }]
+    },
+    // ⑩차트의 설정(Object)
+    options: {
+        responsive: false,
+
+        },
+        // ⑪축에 관한 설정(Object)
+        scales: {
+            // ⑫y축에 대한 설정(Object)
+
+          y: {
+                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)
+                beginAtZero: true
+            }
+        }
+
+
+});
+//매출 시간대별 막대그래프
+var chartArea11 = document.getElementById('시간대인구').getContext('2d');
+// 차트를 생성한다.
+var myChart11 = new Chart(chartArea11, {
+    // ①차트의 종류(String)
+    type: 'line',
+    // ②차트의 데이터(Object)
+    data: {
+        // ③x축에 들어갈 이름들(Array)
+        labels: res["유동-시간대별"].label,
+        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.
+        datasets: [{
+            // ⑤dataset의 이름(String)
+            label: '유동-시간대별',
+            // ⑥dataset값(Array)
+            data: res["유동-시간대별"].data,
+            // ⑦dataset의 배경색(rgba값을 String으로 표현)
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            // ⑧dataset의 선 색(rgba값을 String으로 표현)
+            borderColor: 'rgba(255, 99, 132, 1)',
+            // ⑨dataset의 선 두께(Number)
+            borderWidth: 1
+        }]
+    },
+
+    // ⑩차트의 설정(Object)
+    options: {
+        responsive: false,
+
+        },
+        // ⑪축에 관한 설정(Object)
+        scales: {
+            // ⑫y축에 대한 설정(Object)
+            y: {
+                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)
+                beginAtZero: true
+            }
+        }
+
+});
+var totalpopulation = document.getElementById('totalpopulation');
+totalpopulation.innerHTML = res["유동-총"];
+
 });}
 </script>
 
