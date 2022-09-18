@@ -78,28 +78,51 @@
     <div class="ResultReport0">
         <div class="chart-wrap" >
             <div class="reporttitle">업종 분석</div>
+            <div class="chart">
             <canvas id="점포수" ></canvas>
-            <canvas id="프랜차이즈" width="height:10vh; width:10vw" ></canvas>
+            <div class="reportexplain" >분기별 점포수</div>
+            <canvas id="프랜차이즈" class="piechart" width="height:10vh; width:10vw" ></canvas>
+                <div class="reportexplain" >일반점포/프랜차이즈 </div>
             <canvas id="개업수" ></canvas>
+                <div class="reportexplain" >분기별 개업수 </div>
             <canvas id="폐업수" ></canvas>
+                <div class="reportexplain" >분기별 폐업수 </div>
+                </div>
              <div class="reporttitle">매출 분석</div>
+            <div class="chart">
             <canvas id="요일별매출" ></canvas>
+                <div class="reportexplain" >요일별 매출 </div>
             <canvas id="시간대별매출" ></canvas>
-            <canvas id="성별매출" width="height:10vh; width:10vw" ></canvas>
+                <div class="reportexplain" >시간대별 매출 </div>
+            <canvas id="성별매출" class="piechart" width="height:10vh; width:10vw" ></canvas>
+                <div class="reportexplain" >성별 매출 </div>
             <canvas id="연령대별매출"></canvas>
+                <div class="reportexplain" >연령대별 매출 </div>
+            </div>
             <div class="reporttitle">인구 분석</div>
-            <canvas id="성별인구" width="height:10vh; width:10vw"></canvas>
+            <div class="chart">
+            <canvas id="성별인구" class="piechart" width="height:10vh; width:10vw"></canvas>
+                <div class="reportexplain" >성별 유동인구 </div>
             <canvas id="연령대인구" ></canvas>
+                <div class="reportexplain" >연령대별 유동인구 </div>
             <canvas id="요일인구"></canvas>
+                <div class="reportexplain" >요일별 유동인구 </div>
             <canvas id="시간대인구" ></canvas>
-            <div class="reporttext">총 생활인구는 <span id="totalpopulation"></span>명 입니다. </div>
+                <div class="reportexplain" >시간대별 유동인구 </div>
+
+            <div class="reporttext">=>총 생활인구는 <span id="totalpopulation"></span>명 입니다. </div>
             <canvas id="연령대별상주인구" ></canvas>
-             <div class="reporttext">총 상주인구는 <span id="totaldwellingpopulation"></span>명 입니다. </div>
+                <div class="reportexplain" >연령대별 상주인구 </div>
+             <div class="reporttext">=>총 상주인구는 <span id="totaldwellingpopulation"></span>명 입니다. </div>
             <canvas id="연령대별직장인구" ></canvas>
-             <div class="reporttext">총 직장인구는 <span id="totalworkplacepopulation"></span>명 입니다.</div>
-             <div class="reporttitle" id="reportvisitort">주요시설, 집객시설 현황 </div>
-            <div class="reporttext">총 집객시설 수는 <span id="totalvisitorfacilities"></span>개 입니다.</div>
-        </div>
+                <div class="reportexplain" >연령대별 직장인구 </div>
+
+             </div>
+             <div class="reporttext" id="reportend0">=>총 직장인구는 <span id="totalworkplacepopulation"></span>명 입니다.</div>
+             <div class="reporttitle" >주요시설, 집객시설 현황 </div>
+            <div class="reporttext" id="reportend1">=>총 집객시설 수는 <span id="totalvisitorfacilities"></span>개 입니다.</div>
+
+            </div>
     </div>
 </div>
 </div>
@@ -502,11 +525,11 @@ var myChart = new Chart(chartArea, {
             // ⑥dataset값(Array)
             data: res["점포수"].data,
             // ⑦dataset의 배경색(rgba값을 String으로 표현)
-            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            backgroundColor: 'rgb(243,104,104)',
             // ⑧dataset의 선 색(rgba값을 String으로 표현)
             borderColor: 'rgba(255, 99, 132, 1)',
             // ⑨dataset의 선 두께(Number)
-            borderWidth: 1
+            borderWidth: 2
         }]
     },
     // ⑩차트의 설정(Object)
@@ -519,6 +542,7 @@ var myChart = new Chart(chartArea, {
             y: {
                 // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)
                 beginAtZero: true
+
             }
         }
     }
@@ -539,10 +563,10 @@ var myChart1 = new Chart(chartArea1, {
             // ⑥dataset값(Array)
             data: res["일반/프랜차이즈"].data,
             // ⑦dataset의 배경색(rgba값을 String으로 표현)
-             backgroundColor: ['#28c3d7', '#FF6384'],
+             backgroundColor: ['#39b7ef', '#63ff7d'],
 
             // ⑧dataset의 선 색(rgba값을 String으로 표현)
-            borderColor: 'rgb(234,33,33)',
+            borderColor: 'rgb(253,253,254)',
             // ⑨dataset의 선 두께(Number)
             borderWidth: 1
         }]
@@ -550,14 +574,7 @@ var myChart1 = new Chart(chartArea1, {
     // ⑩차트의 설정(Object)
     options: {
         responsive: false,
-        // ⑪축에 관한 설정(Object)
-        scales: {
-            // ⑫y축에 대한 설정(Object)
-            y: {
-                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)
-                beginAtZero: true
-            }
-        }
+
     }
 });
 // 개업수 막대그래프
@@ -576,10 +593,10 @@ var myChart2 = new Chart(chartArea2, {
             // ⑥dataset값(Array)
             data: res["개업수"].data,
             // ⑦dataset의 배경색(rgba값을 String으로 표현)
-             backgroundColor: ['#28c3d7', '#FF6384'],
+             backgroundColor: ['#f3e476'],
 
             // ⑧dataset의 선 색(rgba값을 String으로 표현)
-            borderColor: 'rgb(234,33,33)',
+            borderColor: 'rgb(242,242,250)',
             // ⑨dataset의 선 두께(Number)
             borderWidth: 1
         }]
@@ -613,10 +630,10 @@ var myChart3 = new Chart(chartArea3, {
             // ⑥dataset값(Array)
             data: res["폐업수"].data,
             // ⑦dataset의 배경색(rgba값을 String으로 표현)
-             backgroundColor: ['#28c3d7', '#FF6384'],
+             backgroundColor: ['#fd8484'],
 
             // ⑧dataset의 선 색(rgba값을 String으로 표현)
-            borderColor: 'rgb(234,33,33)',
+            borderColor: 'rgb(255,229,229)',
             // ⑨dataset의 선 두께(Number)
             borderWidth: 1
         }]
@@ -652,10 +669,10 @@ var myChart4 = new Chart(chartArea4, {
             // ⑥dataset값(Array)
             data: res["매출-요일별"].data,
             // ⑦dataset의 배경색(rgba값을 String으로 표현)
-             backgroundColor: ['#28c3d7', '#FF6384','#fde288','#db3545'],
+             backgroundColor: ['#FCA5A4FF', '#fbd09f','#fbfdb3','#c2fdb9', '#96f1fc','#98BAFAFF','#B4A7F9FF'],
 
             // ⑧dataset의 선 색(rgba값을 String으로 표현)
-            borderColor: 'rgb(234,33,33)',
+            borderColor: 'rgb(255,255,255)',
             // ⑨dataset의 선 두께(Number)
             borderWidth: 1
         }]
@@ -693,11 +710,11 @@ var myChart5 = new Chart(chartArea5, {
             // ⑥dataset값(Array)
             data: res["매출-시간대별"].data,
             // ⑦dataset의 배경색(rgba값을 String으로 표현)
-            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            backgroundColor: 'rgb(243,104,104)',
             // ⑧dataset의 선 색(rgba값을 String으로 표현)
             borderColor: 'rgba(255, 99, 132, 1)',
             // ⑨dataset의 선 두께(Number)
-            borderWidth: 1
+            borderWidth: 2
         }]
     },
 
@@ -732,10 +749,10 @@ var myChart6 = new Chart(chartArea6, {
             // ⑥dataset값(Array)
             data: res["매출-성별"].data,
             // ⑦dataset의 배경색(rgba값을 String으로 표현)
-             backgroundColor: ['#28c3d7', '#FF6384'],
+            backgroundColor: ['#92dafa', '#ffa9a9'],
 
             // ⑧dataset의 선 색(rgba값을 String으로 표현)
-            borderColor: 'rgb(234,33,33)',
+            borderColor: 'rgb(253,253,254)',
             // ⑨dataset의 선 두께(Number)
             borderWidth: 1
         }]
@@ -744,13 +761,7 @@ var myChart6 = new Chart(chartArea6, {
     options: {
         responsive: false,
         // ⑪축에 관한 설정(Object)
-        scales: {
-            // ⑫y축에 대한 설정(Object)
-            y: {
-                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)
-                beginAtZero: true
-            }
-        }
+
     }
 });
 // 연령대별 매출 - 막대 차트
@@ -770,10 +781,10 @@ var myChart7 = new Chart(chartArea7, {
             // ⑥dataset값(Array)
             data: res["매출-연령대별"].data,
             // ⑦dataset의 배경색(rgba값을 String으로 표현)
-             backgroundColor: ['#28c3d7', '#FF6384','#fde288','#db3545'],
+             backgroundColor: ['#C5AAD3FF', '#FBC1D7FF','#faa6c6','#B5D9FBFF','#8D8DEFFF','#99C7F9FF'],
 
             // ⑧dataset의 선 색(rgba값을 String으로 표현)
-            borderColor: 'rgb(234,33,33)',
+            borderColor: 'rgb(245,245,255)',
             // ⑨dataset의 선 두께(Number)
             borderWidth: 1
         }]
@@ -811,10 +822,10 @@ var myChart8 = new Chart(chartArea8, {
             // ⑥dataset값(Array)
             data: res["유동-성별"].data,
             // ⑦dataset의 배경색(rgba값을 String으로 표현)
-             backgroundColor: ['#28c3d7', '#FF6384'],
+             backgroundColor: ['#92dafa', '#ffa9a9'],
 
             // ⑧dataset의 선 색(rgba값을 String으로 표현)
-            borderColor: 'rgb(234,33,33)',
+            borderColor: 'rgb(253,253,254)',
             // ⑨dataset의 선 두께(Number)
             borderWidth: 1
         }]
@@ -850,10 +861,10 @@ var myChart9 = new Chart(chartArea9, {
             // ⑥dataset값(Array)
             data: res["유동-연령대별"].data,
             // ⑦dataset의 배경색(rgba값을 String으로 표현)
-             backgroundColor: ['#28c3d7', '#FF6384','#fde288','#db3545'],
+            backgroundColor: ['#C5AAD3FF', '#FBC1D7FF','#faa6c6','#B5D9FBFF','#8D8DEFFF','#99C7F9FF'],
 
             // ⑧dataset의 선 색(rgba값을 String으로 표현)
-            borderColor: 'rgb(234,33,33)',
+            borderColor: 'rgb(245,245,255)',
             // ⑨dataset의 선 두께(Number)
             borderWidth: 1
         }]
@@ -893,10 +904,10 @@ var myChart10 = new Chart(chartArea10, {
             // ⑥dataset값(Array)
             data: res["유동-요일별"].data,
             // ⑦dataset의 배경색(rgba값을 String으로 표현)
-             backgroundColor: ['#28c3d7', '#FF6384','#fde288','#db3545'],
+            backgroundColor: ['#FCA5A4FF', '#fbd09f','#fbfdb3','#c2fdb9', '#96f1fc','#98BAFAFF','#B4A7F9FF'],
 
             // ⑧dataset의 선 색(rgba값을 String으로 표현)
-            borderColor: 'rgb(234,33,33)',
+            borderColor: 'rgb(255,255,255)',
             // ⑨dataset의 선 두께(Number)
             borderWidth: 1
         }]
@@ -935,11 +946,11 @@ var myChart11 = new Chart(chartArea11, {
             // ⑥dataset값(Array)
             data: res["유동-시간대별"].data,
             // ⑦dataset의 배경색(rgba값을 String으로 표현)
-            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            backgroundColor: 'rgb(243,104,104)',
             // ⑧dataset의 선 색(rgba값을 String으로 표현)
             borderColor: 'rgba(255, 99, 132, 1)',
             // ⑨dataset의 선 두께(Number)
-            borderWidth: 1
+            borderWidth: 2
         }]
     },
 
@@ -978,10 +989,10 @@ var myChart12 = new Chart(chartArea12, {
             // ⑥dataset값(Array)
             data: res["주거-연령대별"].data,
             // ⑦dataset의 배경색(rgba값을 String으로 표현)
-             backgroundColor: ['#28c3d7', '#FF6384','#fde288','#db3545'],
+            backgroundColor: ['#C5AAD3FF', '#FBC1D7FF','#faa6c6','#B5D9FBFF','#8D8DEFFF','#99C7F9FF'],
 
             // ⑧dataset의 선 색(rgba값을 String으로 표현)
-            borderColor: 'rgb(234,33,33)',
+            borderColor: 'rgb(245,245,255)',
             // ⑨dataset의 선 두께(Number)
             borderWidth: 1
         }]
@@ -1023,10 +1034,10 @@ var myChart13 = new Chart(chartArea13, {
             // ⑥dataset값(Array)
             data: res["직장-연령대별"].data,
             // ⑦dataset의 배경색(rgba값을 String으로 표현)
-             backgroundColor: ['#28c3d7', '#FF6384','#fde288','#db3545'],
+             backgroundColor: ['#C5AAD3FF', '#FBC1D7FF','#faa6c6','#B5D9FBFF','#8D8DEFFF','#99C7F9FF'],
 
             // ⑧dataset의 선 색(rgba값을 String으로 표현)
-            borderColor: 'rgb(234,33,33)',
+            borderColor: 'rgb(245,245,255)',
             // ⑨dataset의 선 두께(Number)
             borderWidth: 1
         }]
