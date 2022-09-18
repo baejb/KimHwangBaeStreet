@@ -16,11 +16,10 @@
     <div id="menu_wrap" class="bg_white">
         <div class="search">
             <div>
-                 <form  action="" method="get" onsubmit="showguSearch();">
-                     <input id="searchInput" type="search" name="guName" placeholder="검색어 입력"
-                     onfocus="this.placeholder='' "onblur="this.placeholder='Google 검색 및 URL 입력'">
+                <form  action="" method="get" onsubmit="return false;">
+                     <input id="searchInput" class="searchInput" type="search" name="guName" placeholder="검색어 입력"
+                     onfocus="this.placeholder=''" onblur="this.placeholder='검색어 입력'">
                      <input id="search_btn" type="submit"  value="검색" >
-
                 </form>
             </div>
         </div>
@@ -79,24 +78,24 @@
     <div class="ResultReport0">
         <div class="chart-wrap" >
             <div class="reporttitle">업종 분석</div>
-            <canvas id="점포수" width="height:30vh; width:50vw"></canvas>
-            <canvas id="프랜차이즈" width="height:10vh; width:10vw"></canvas>
-            <canvas id="개업수" width="height:30vh; width:50vw"></canvas>
-            <canvas id="폐업수" width="height:30vh; width:50vw"></canvas>
+            <canvas id="점포수" ></canvas>
+            <canvas id="프랜차이즈" width="height:10vh; width:10vw" ></canvas>
+            <canvas id="개업수" ></canvas>
+            <canvas id="폐업수" ></canvas>
              <div class="reporttitle">매출 분석</div>
-            <canvas id="요일별매출" width="height:30vh; width:50vw"></canvas>
-            <canvas id="시간대별매출" width="height:30vh; width:50vw"></canvas>
-            <canvas id="성별매출" width="height:30vh; width:50vw"></canvas>
-            <canvas id="연령대별매출" width="height:30vh; width:50vw"></canvas>
+            <canvas id="요일별매출" ></canvas>
+            <canvas id="시간대별매출" ></canvas>
+            <canvas id="성별매출" width="height:10vh; width:10vw" ></canvas>
+            <canvas id="연령대별매출"></canvas>
             <div class="reporttitle">인구 분석</div>
-            <canvas id="성별인구" width="height:30vh; width:50vw"></canvas>
-            <canvas id="연령대인구" width="height:30vh; width:50vw"></canvas>
-            <canvas id="요일인구" width="height:30vh; width:50vw"></canvas>
-            <canvas id="시간대인구" width="height:30vh; width:50vw"></canvas>
+            <canvas id="성별인구" width="height:10vh; width:10vw"></canvas>
+            <canvas id="연령대인구" ></canvas>
+            <canvas id="요일인구"></canvas>
+            <canvas id="시간대인구" ></canvas>
             <div class="reporttext">총 생활인구는 <span id="totalpopulation"></span>명 입니다. </div>
-            <canvas id="연령대별상주인구" width="height:30vh; width:50vw"></canvas>
+            <canvas id="연령대별상주인구" ></canvas>
              <div class="reporttext">총 상주인구는 <span id="totaldwellingpopulation"></span>명 입니다. </div>
-            <canvas id="연령대별직장인구" width="height:30vh; width:50vw"></canvas>
+            <canvas id="연령대별직장인구" ></canvas>
              <div class="reporttext">총 직장인구는 <span id="totalworkplacepopulation"></span>명 입니다.</div>
              <div class="reporttitle" id="reportvisitort">주요시설, 집객시설 현황 </div>
             <div class="reporttext">총 집객시설 수는 <span id="totalvisitorfacilities"></span>개 입니다.</div>
@@ -299,6 +298,28 @@ $.getJSON('http://127.0.0.1:8000/map/', function(data){
     })
     console.log(aJsonArray);
 
+    function show(){ //검색창에 입력시 이동
+
+    let text = document.getElementsByClassName("searchInput")[0].value;
+
+    let res = aJsonArray.find((element) => {
+        return element.gu === text;
+    });
+    let lat = res.lat;
+    let lng = res.lng;
+    console.log(res);
+
+    showgu(res.gu);
+
+    let Guname = document.getElementById('selectArea');
+        reportGuname = res.gu;
+        //Guname.innerHTML = gu;
+
+    panTo(lat,lng);
+    DrawPolygon();
+    DrawPolygon2();
+}
+document.getElementById("search_btn").addEventListener("click",show);
 
      $.each(aJsonArray, function (index, item) //for 문 index- 0,1,2,,, item- {lat, lng, gu}
     {
