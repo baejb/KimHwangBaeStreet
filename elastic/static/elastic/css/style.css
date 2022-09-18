@@ -191,15 +191,23 @@ hr {
 }
 .reportexplain{
     font-size:18px;
-    margin-bottom: 5%;
-    margin-right: 15%;
+    margin-bottom: 7%;
+
 }
 .chart{
-    margin-left: 15%;
+    margin-left:15%;
+    width:500px;
+    text-align: center;
 }
 .piechart{
-    margin-left: 15%;
+    margin-left: 20%;
 }
 #reportend0, #reportend1{
     margin-left: 15%;
+}
+
+.charts{
+    width: 500px;
+    height:300px;
+
 }
