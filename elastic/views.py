@@ -1,5 +1,7 @@
 from django.http import JsonResponse
 from django.shortcuts import render
+from drf_yasg.openapi import Parameter, TYPE_STRING, IN_QUERY
+from drf_yasg.utils import swagger_auto_schema
 from elasticsearch import Elasticsearch
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -11,6 +13,19 @@ es = Elasticsearch(
 )
 
 class GraphJSON(APIView):
+
+    @swagger_auto_schema(
+        operation_summary="분석 리포트",
+        operation_description="""
+            ### 해당 상권과 서비스업종에 대한 분석 리포트 관련 데이터를 제공한다.
+            """,
+        tags=["Analysis Report"],
+        manual_parameters=[
+            Parameter("cCode", IN_QUERY, type=TYPE_STRING, description="상권명"),
+            Parameter("serviceCode", IN_QUERY, type=TYPE_STRING, description="서비스업종명"),
+        ],
+    )
+
     def get(self, request, format=None):
         global es
 
@@ -321,6 +336,16 @@ class GraphJSON(APIView):
 
 
 class MapDetail(APIView):
+
+    @swagger_auto_schema(
+        operation_summary="서울시 자치구 중심좌표",
+        operation_description="""
+                ### 서울시 자치구의 중심좌표를 제공한다.
+                """,
+        tags=["Seoul Region Latitude and Longitude"],
+
+    )
+
     def get(self, request, format=None):
         global es
 
@@ -345,56 +370,56 @@ class MapDetail(APIView):
         return Response(dic)
 
 
-class FindByGu_key(APIView):
-    def get(self, request, format=None):
-        global es
-        guName = request.GET['guName']
-        res = es.search(index='시군구위도경도', query={
-            'prefix': {
-                'SIG_KOR_NM': guName
-            }
-        }, size=21)
-        # print(res)
-        dic = {'searchList': []}
-
-        for g in res['hits']['hits']:
-            dic['searchList'].append(g['_source']['SIG_KOR_NM'])
-
-        print(dic)
-        # i = res['hits']['hits'][0]
-        #
-        # dic['positions'] = {'lat': i['_source']['y'], 'lng': i['_source']['x'], 'gu': i['_source']['SIG_KOR_NM']}
-
-        return Response(dic)
-
-
-class FindByGu_enter(APIView):
-    def get(self, request, format=None):
-        global es
-        guName = request.GET['guName']
-        res = es.search(index='시군구위도경도', query={
-            'fuzzy': {
-                'SIG_KOR_NM': guName
-            }
-        }, size=21)
-        # print(res)
-
-        if not res['hits']['hits']:
-            res = es.search(index='시군구위도경도', query={
-                'prefix': {
-                    'SIG_KOR_NM': guName
-                }
-            }, size=21)
-
-        if not res['hits']['hits']:
-            return Response(False)
-
-        dic = {'positions': {}}
-        i = res['hits']['hits'][0]
-
-        dic['positions'] = {'lat': i['_source']['y'], 'lng': i['_source']['x'], 'gu': i['_source']['SIG_KOR_NM']}
-
-        return Response(dic)
+# class FindByGu_key(APIView):
+#     def get(self, request, format=None):
+#         global es
+#         guName = request.GET['guName']
+#         res = es.search(index='시군구위도경도', query={
+#             'prefix': {
+#                 'SIG_KOR_NM': guName
+#             }
+#         }, size=21)
+#         # print(res)
+#         dic = {'searchList': []}
+#
+#         for g in res['hits']['hits']:
+#             dic['searchList'].append(g['_source']['SIG_KOR_NM'])
+#
+#         print(dic)
+#         # i = res['hits']['hits'][0]
+#         #
+#         # dic['positions'] = {'lat': i['_source']['y'], 'lng': i['_source']['x'], 'gu': i['_source']['SIG_KOR_NM']}
+#
+#         return Response(dic)
+#
+#
+# class FindByGu_enter(APIView):
+#     def get(self, request, format=None):
+#         global es
+#         guName = request.GET['guName']
+#         res = es.search(index='시군구위도경도', query={
+#             'fuzzy': {
+#                 'SIG_KOR_NM': guName
+#             }
+#         }, size=21)
+#         # print(res)
+#
+#         if not res['hits']['hits']:
+#             res = es.search(index='시군구위도경도', query={
+#                 'prefix': {
+#                     'SIG_KOR_NM': guName
+#                 }
+#             }, size=21)
+#
+#         if not res['hits']['hits']:
+#             return Response(False)
+#
+#         dic = {'positions': {}}
+#         i = res['hits']['hits'][0]
+#
+#         dic['positions'] = {'lat': i['_source']['y'], 'lng': i['_source']['x'], 'gu': i['_source']['SIG_KOR_NM']}
+#
+#         return Response(dic)
 
 
 # class Population(APIView):
@@ -698,7 +723,6 @@ def polygon(request):
     f = open('elastic\polygon.geojson', encoding='utf-8')
     context = json.load(f)
     f.close()
-    # print(context)
     return JsonResponse(context)
 
 
@@ -706,5 +730,4 @@ def polygon2(request):
     f = open('elastic\polygon2.geojson', encoding='utf-8')
     context = json.load(f)
     f.close()
-    # print(context)
     return JsonResponse(context)
