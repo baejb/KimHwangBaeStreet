@@ -79,42 +79,42 @@
         <div class="chart-wrap" >
             <div class="reporttitle">업종 분석</div>
             <div class="chart">
-            <canvas id="점포수" ></canvas>
+            <canvas id="점포수"  ></canvas>
             <div class="reportexplain" >분기별 점포수</div>
             <canvas id="프랜차이즈" class="piechart" width="height:10vh; width:10vw" ></canvas>
                 <div class="reportexplain" >일반점포/프랜차이즈 </div>
-            <canvas id="개업수" ></canvas>
+            <canvas id="개업수"  ></canvas>
                 <div class="reportexplain" >분기별 개업수 </div>
-            <canvas id="폐업수" ></canvas>
+            <canvas id="폐업수"  ></canvas>
                 <div class="reportexplain" >분기별 폐업수 </div>
                 </div>
              <div class="reporttitle">매출 분석</div>
             <div class="chart">
-            <canvas id="요일별매출" ></canvas>
+            <canvas id="요일별매출"   ></canvas>
                 <div class="reportexplain" >요일별 매출 </div>
             <canvas id="시간대별매출" ></canvas>
                 <div class="reportexplain" >시간대별 매출 </div>
             <canvas id="성별매출" class="piechart" width="height:10vh; width:10vw" ></canvas>
                 <div class="reportexplain" >성별 매출 </div>
-            <canvas id="연령대별매출"></canvas>
+            <canvas id="연령대별매출"  ></canvas>
                 <div class="reportexplain" >연령대별 매출 </div>
             </div>
             <div class="reporttitle">인구 분석</div>
             <div class="chart">
             <canvas id="성별인구" class="piechart" width="height:10vh; width:10vw"></canvas>
                 <div class="reportexplain" >성별 유동인구 </div>
-            <canvas id="연령대인구" ></canvas>
+            <canvas id="연령대인구"  ></canvas>
                 <div class="reportexplain" >연령대별 유동인구 </div>
-            <canvas id="요일인구"></canvas>
+            <canvas id="요일인구"  ></canvas>
                 <div class="reportexplain" >요일별 유동인구 </div>
-            <canvas id="시간대인구" ></canvas>
+            <canvas id="시간대인구"   ></canvas>
                 <div class="reportexplain" >시간대별 유동인구 </div>
 
             <div class="reporttext">=>총 생활인구는 <span id="totalpopulation"></span>명 입니다. </div>
-            <canvas id="연령대별상주인구" ></canvas>
+            <canvas id="연령대별상주인구"  ></canvas>
                 <div class="reportexplain" >연령대별 상주인구 </div>
              <div class="reporttext">=>총 상주인구는 <span id="totaldwellingpopulation"></span>명 입니다. </div>
-            <canvas id="연령대별직장인구" ></canvas>
+            <canvas id="연령대별직장인구" class="charts"  ></canvas>
                 <div class="reportexplain" >연령대별 직장인구 </div>
 
              </div>
@@ -494,7 +494,9 @@ let Data;
 //const urlParameter = window.location.search; // 현재 url 가져옴
 
 // 분석하기 버튼 클릭했을 시 차트 띄우기
+
 function clickReport(){
+
     var link =  document.location.href;
     var result = link.replace('index', 'test');
     thislink =result;
@@ -509,9 +511,13 @@ fetch(thislink)
   .then(res => res.json())
   .then(res => {
 //막대 그래프
+
 var chartArea = document.getElementById('점포수').getContext('2d');
 // 차트를 생성한다.
-var myChart = new Chart(chartArea, {
+      if(window.myChart != undefined){
+          window.myChart.destroy();
+      }
+window.myChart = new Chart(chartArea, {
     // ①차트의 종류(String)
     type: 'line',
     // ②차트의 데이터(Object)
@@ -534,8 +540,8 @@ var myChart = new Chart(chartArea, {
     },
     // ⑩차트의 설정(Object)
     options: {
-        maintainAspectRatio :false,
-        responsive: false,
+
+        responsive: true,
         // ⑪축에 관한 설정(Object)
         scales: {
             // ⑫y축에 대한 설정(Object)
@@ -549,7 +555,10 @@ var myChart = new Chart(chartArea, {
 });
 //프랜차이즈와 일반점포 비율 파이차트
 var chartArea1 = document.getElementById('프랜차이즈').getContext('2d');
-var myChart1 = new Chart(chartArea1, {
+if(window.myChart1 != undefined){
+          window.myChart1.destroy();
+      }
+window.myChart1 = new Chart(chartArea1, {
     // ①차트의 종류(String)
     type: 'pie',
     // ②차트의 데이터(Object)
@@ -579,7 +588,10 @@ var myChart1 = new Chart(chartArea1, {
 });
 // 개업수 막대그래프
 var chartArea2 = document.getElementById('개업수').getContext('2d');
-var myChart2 = new Chart(chartArea2, {
+if(window.myChart2 != undefined){
+          window.myChart2.destroy();
+      }
+window.myChart2 = new Chart(chartArea2, {
     // ①차트의 종류(String)
     type: 'bar',
     // ②차트의 데이터(Object)
@@ -603,7 +615,7 @@ var myChart2 = new Chart(chartArea2, {
     },
     // ⑩차트의 설정(Object)
     options: {
-        responsive: false,
+        responsive: true,
         // ⑪축에 관한 설정(Object)
         scales: {
             // ⑫y축에 대한 설정(Object)
@@ -616,7 +628,11 @@ var myChart2 = new Chart(chartArea2, {
 });
 //폐업수 막대그래프
 var chartArea3 = document.getElementById('폐업수').getContext('2d');
-var myChart3 = new Chart(chartArea3, {
+if(window.myChart3 != undefined){
+          window.myChart3.destroy();
+
+      }
+window.myChart3 = new Chart(chartArea3, {
     // ①차트의 종류(String)
     type: 'bar',
     // ②차트의 데이터(Object)
@@ -640,7 +656,7 @@ var myChart3 = new Chart(chartArea3, {
     },
     // ⑩차트의 설정(Object)
     options: {
-        responsive: false,
+        responsive: true,
         // ⑪축에 관한 설정(Object)
         scales: {
             // ⑫y축에 대한 설정(Object)
@@ -654,7 +670,11 @@ var myChart3 = new Chart(chartArea3, {
 //요일별 매출 막대그래프
 
 var chartArea4 = document.getElementById('요일별매출').getContext('2d');
-var myChart4 = new Chart(chartArea4, {
+if(window.myChart4 != undefined){
+          window.myChart4.destroy();
+
+      }
+window.myChart4 = new Chart(chartArea4, {
     // ①차트의 종류(String)
     type: 'bar',
 
@@ -679,7 +699,7 @@ var myChart4 = new Chart(chartArea4, {
     },
     // ⑩차트의 설정(Object)
     options: {
-        responsive: false,
+        responsive: true,
 
         },
         // ⑪축에 관한 설정(Object)
@@ -696,7 +716,11 @@ var myChart4 = new Chart(chartArea4, {
 //매출 시간대별 막대그래프
 var chartArea5 = document.getElementById('시간대별매출').getContext('2d');
 // 차트를 생성한다.
-var myChart5 = new Chart(chartArea5, {
+      if(window.myChart5 != undefined){
+          window.myChart5.destroy();
+
+      }
+window.myChart5 = new Chart(chartArea5, {
     // ①차트의 종류(String)
     type: 'line',
     // ②차트의 데이터(Object)
@@ -720,7 +744,7 @@ var myChart5 = new Chart(chartArea5, {
 
     // ⑩차트의 설정(Object)
     options: {
-        responsive: false,
+        responsive: true,
 
         },
         // ⑪축에 관한 설정(Object)
@@ -735,7 +759,11 @@ var myChart5 = new Chart(chartArea5, {
 });
 //성별 매출 -> 파이차트
 var chartArea6 = document.getElementById('성별매출').getContext('2d');
-var myChart6 = new Chart(chartArea6, {
+if(window.myChart6 != undefined){
+          window.myChart6.destroy();
+
+      }
+window.myChart6 = new Chart(chartArea6, {
     // ①차트의 종류(String)
     type: 'pie',
     // ②차트의 데이터(Object)
@@ -766,7 +794,11 @@ var myChart6 = new Chart(chartArea6, {
 });
 // 연령대별 매출 - 막대 차트
 var chartArea7 = document.getElementById('연령대별매출').getContext('2d');
-var myChart7 = new Chart(chartArea7, {
+if(window.myChart7 != undefined){
+          window.myChart7.destroy();
+
+      }
+window.myChart7 = new Chart(chartArea7, {
     // ①차트의 종류(String)
     type: 'bar',
 
@@ -791,7 +823,7 @@ var myChart7 = new Chart(chartArea7, {
     },
     // ⑩차트의 설정(Object)
     options: {
-        responsive: false,
+        responsive: true,
 
         },
         // ⑪축에 관한 설정(Object)
@@ -808,7 +840,11 @@ var myChart7 = new Chart(chartArea7, {
 });
 //성별 인구 -> 파이차트
 var chartArea8 = document.getElementById('성별인구').getContext('2d');
-var myChart8 = new Chart(chartArea8, {
+if(window.myChart8 != undefined){
+          window.myChart8.destroy();
+
+      }
+window.myChart8 = new Chart(chartArea8, {
     // ①차트의 종류(String)
     type: 'pie',
     // ②차트의 데이터(Object)
@@ -840,7 +876,11 @@ var myChart8 = new Chart(chartArea8, {
 
 // 연령대별 인구  - 막대 차트
 var chartArea9 = document.getElementById('연령대인구').getContext('2d');
-var myChart9 = new Chart(chartArea9, {
+if(window.myChart9 != undefined){
+          window.myChart9.destroy();
+
+      }
+window.myChart9 = new Chart(chartArea9, {
     // ①차트의 종류(String)
     type: 'bar',
 
@@ -865,7 +905,7 @@ var myChart9 = new Chart(chartArea9, {
     },
     // ⑩차트의 설정(Object)
     options: {
-        responsive: false,
+        responsive: true,
 
         },
         // ⑪축에 관한 설정(Object)
@@ -883,7 +923,11 @@ var myChart9 = new Chart(chartArea9, {
 
 // 요일 인구  - 막대 차트
 var chartArea10 = document.getElementById('요일인구').getContext('2d');
-var myChart10 = new Chart(chartArea10, {
+if(window.myChart10 != undefined){
+          window.myChart10.destroy();
+
+      }
+window.myChart10 = new Chart(chartArea10, {
     // ①차트의 종류(String)
     type: 'bar',
 
@@ -908,7 +952,7 @@ var myChart10 = new Chart(chartArea10, {
     },
     // ⑩차트의 설정(Object)
     options: {
-        responsive: false,
+        responsive: true,
 
         },
         // ⑪축에 관한 설정(Object)
@@ -925,8 +969,12 @@ var myChart10 = new Chart(chartArea10, {
 });
 //매출 시간대별 막대그래프
 var chartArea11 = document.getElementById('시간대인구').getContext('2d');
+if(window.myChart11 != undefined){
+          window.myChart11.destroy();
+
+      }
 // 차트를 생성한다.
-var myChart11 = new Chart(chartArea11, {
+window.myChart11 = new Chart(chartArea11, {
     // ①차트의 종류(String)
     type: 'line',
     // ②차트의 데이터(Object)
@@ -950,7 +998,7 @@ var myChart11 = new Chart(chartArea11, {
 
     // ⑩차트의 설정(Object)
     options: {
-        responsive: false,
+        responsive: true,
 
         },
         // ⑪축에 관한 설정(Object)
@@ -968,7 +1016,11 @@ totalpopulation.innerHTML = res["유동-총"];
 
 // 연령대별상주인구  - 막대 차트
 var chartArea12 = document.getElementById('연령대별상주인구').getContext('2d');
-var myChart12 = new Chart(chartArea12, {
+if(window.myChart12 != undefined){
+          window.myChart12.destroy();
+
+      }
+window.myChart12 = new Chart(chartArea12, {
     // ①차트의 종류(String)
     type: 'bar',
 
@@ -993,7 +1045,7 @@ var myChart12 = new Chart(chartArea12, {
     },
     // ⑩차트의 설정(Object)
     options: {
-        responsive: false,
+        responsive: true,
 
         },
         // ⑪축에 관한 설정(Object)
@@ -1013,7 +1065,11 @@ totaldwellingpopulation.innerHTML = res["주거-총"];
 
 // 연령대별상주인구  - 막대 차트
 var chartArea13 = document.getElementById('연령대별직장인구').getContext('2d');
-var myChart13 = new Chart(chartArea13, {
+if(window.myChart13 != undefined){
+          window.myChart13.destroy();
+
+      }
+window.myChart13 = new Chart(chartArea13, {
     // ①차트의 종류(String)
     type: 'bar',
 
@@ -1038,7 +1094,7 @@ var myChart13 = new Chart(chartArea13, {
     },
     // ⑩차트의 설정(Object)
     options: {
-        responsive: false,
+        responsive: true,
 
         },
         // ⑪축에 관한 설정(Object)
