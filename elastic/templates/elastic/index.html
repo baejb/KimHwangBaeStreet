@@ -91,6 +91,10 @@
             <canvas id="요일인구" width="height:30vh; width:50vw"></canvas>
             <canvas id="시간대인구" width="height:30vh; width:50vw"></canvas>
             <div>총 생활인구는 <span id="totalpopulation"></span>명 입니다. </div>
+            <canvas id="연령대별상주인구" width="height:30vh; width:50vw"></canvas>
+             <div>총 상주인구는 <span id="totaldwellingpopulation"></span>명 입니다. </div>
+            <canvas id="연령대별직장인구" width="height:30vh; width:50vw"></canvas>
+             <div>총 직장인구는 <span id="totalworkplacepopulation"></span>명 입니다. </div>
         </div>
     </div>
 </div>
@@ -931,6 +935,96 @@ var myChart11 = new Chart(chartArea11, {
 });
 var totalpopulation = document.getElementById('totalpopulation');
 totalpopulation.innerHTML = res["유동-총"];
+
+// 연령대별상주인구  - 막대 차트
+var chartArea12 = document.getElementById('연령대별상주인구').getContext('2d');
+var myChart12 = new Chart(chartArea12, {
+    // ①차트의 종류(String)
+    type: 'bar',
+
+    // ②차트의 데이터(Object)
+    data: {
+        // ③x축에 들어갈 이름들(Array)
+        labels: res["주거-연령대별"].label,
+        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.
+        datasets: [{
+            // ⑤dataset의 이름(String)
+            label: '주거-연령대별',
+            // ⑥dataset값(Array)
+            data: res["주거-연령대별"].data,
+            // ⑦dataset의 배경색(rgba값을 String으로 표현)
+             backgroundColor: ['#28c3d7', '#FF6384','#fde288','#db3545'],
+
+            // ⑧dataset의 선 색(rgba값을 String으로 표현)
+            borderColor: 'rgb(234,33,33)',
+            // ⑨dataset의 선 두께(Number)
+            borderWidth: 1
+        }]
+    },
+    // ⑩차트의 설정(Object)
+    options: {
+        responsive: false,
+
+        },
+        // ⑪축에 관한 설정(Object)
+        scales: {
+            // ⑫y축에 대한 설정(Object)
+
+          y: {
+                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)
+                beginAtZero: true
+            }
+        }
+
+
+});
+var totaldwellingpopulation = document.getElementById('totaldwellingpopulation');
+totaldwellingpopulation.innerHTML = res["주거-총"];
+
+// 연령대별상주인구  - 막대 차트
+var chartArea13 = document.getElementById('연령대별직장인구').getContext('2d');
+var myChart13 = new Chart(chartArea13, {
+    // ①차트의 종류(String)
+    type: 'bar',
+
+    // ②차트의 데이터(Object)
+    data: {
+        // ③x축에 들어갈 이름들(Array)
+        labels: res["직장-연령대별"].label,
+        // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.
+        datasets: [{
+            // ⑤dataset의 이름(String)
+            label: '직장-연령대별',
+            // ⑥dataset값(Array)
+            data: res["직장-연령대별"].data,
+            // ⑦dataset의 배경색(rgba값을 String으로 표현)
+             backgroundColor: ['#28c3d7', '#FF6384','#fde288','#db3545'],
+
+            // ⑧dataset의 선 색(rgba값을 String으로 표현)
+            borderColor: 'rgb(234,33,33)',
+            // ⑨dataset의 선 두께(Number)
+            borderWidth: 1
+        }]
+    },
+    // ⑩차트의 설정(Object)
+    options: {
+        responsive: false,
+
+        },
+        // ⑪축에 관한 설정(Object)
+        scales: {
+            // ⑫y축에 대한 설정(Object)
+
+          y: {
+                // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)
+                beginAtZero: true
+            }
+        }
+
+
+});
+var totalworkplacepopulation = document.getElementById('totalworkplacepopulation');
+totalworkplacepopulation.innerHTML = res["직장-총"];
 
 });}
 </script>
