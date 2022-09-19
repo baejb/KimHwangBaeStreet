@@ -36,7 +36,8 @@ class GraphJSON(APIView):
             },
             "일반/프랜차이즈": {
                 "label": ["일반점포", "프랜차이즈"],
-                "data": [0, 0]
+                "data": [0, 0],
+                "max": '데이터 없음'
             },
             "개업수": {
                 "label": ['2021년 1분기', '2021년 2분기', '2021년 3분기', '2021년 4분기'],
@@ -48,28 +49,34 @@ class GraphJSON(APIView):
             },
             "매출-요일별": {
                 "label": ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'],
-                "data": [0, 0, 0, 0, 0, 0, 0]
+                "data": [0, 0, 0, 0, 0, 0, 0],
+                "max" : '데이터 없음'
             },
             "매출-시간대별": {
                 "label": ['00~06', '06~11', '11~14', '14~17', '17~21', '21~24'],
-                "data": [0, 0, 0, 0, 0, 0]
+                "data": [0, 0, 0, 0, 0, 0],
+                "max": '데이터 없음'
             },
             "매출-성별": {
                 "label": ['남성', '여성'],
-                "data": [0, 0]
+                "data": [0, 0],
+                "max": '데이터 없음'
             },
             "매출-연령대별": {
                 "label": ['10대', '20대', '30대', '40대', '50대', '60대 이상'],
-                "data": [0, 0, 0, 0, 0, 0]
+                "data": [0, 0, 0, 0, 0, 0],
+                "max": '데이터 없음'
             },
             "유동-총": 0,
             "유동-성별": {
                 "label": ['남성', '여성'],
-                "data": [0, 0]
+                "data": [0, 0],
+                "max": '데이터 없음'
             },
             "유동-연령대별": {
                 "label": ['10대', '20대', '30대', '40대', '50대', '60대 이상'],
-                "data": [0, 0, 0, 0, 0, 0]
+                "data": [0, 0, 0, 0, 0, 0],
+                "max": '데이터 없음'
             },
             "유동-요일별": {
                 "label": ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'],
@@ -77,17 +84,20 @@ class GraphJSON(APIView):
             },
             "유동-시간대별": {
                 "label": ['00~06', '06~11', '11~14', '14~17', '17~21', '21~24'],
-                "data": [0, 0, 0, 0, 0, 0]
+                "data": [0, 0, 0, 0, 0, 0],
+                "max": '데이터 없음'
             },
             "주거-총": 0,
             "주거-연령대별": {
                 "label": ['10대', '20대', '30대', '40대', '50대', '60대 이상'],
-                "data": [0, 0, 0, 0, 0, 0]
+                "data": [0, 0, 0, 0, 0, 0],
+                "max": '데이터 없음'
             },
             "직장-총": 0,
             "직장-연령대별": {
                 "label": ['10대', '20대', '30대', '40대', '50대', '60대 이상'],
-                "data": [0, 0, 0, 0, 0, 0]
+                "data": [0, 0, 0, 0, 0, 0],
+                "max": '데이터 없음'
             },
             "집객시설수" : 0
         }
@@ -141,6 +151,9 @@ class GraphJSON(APIView):
                 result["개업수"]["data"].append(0)
                 result["폐업수"]["data"].append(0)
 
+            if result["일반/프랜차이즈"]["data"][0] != 0 or result["일반/프랜차이즈"]["data"][1] != 0:
+                result["일반/프랜차이즈"]["max"] = result["일반/프랜차이즈"]["label"][
+                result["일반/프랜차이즈"]["data"].index(max(result["일반/프랜차이즈"]["data"]))]
         # 추정매출
         res2 = es.search(index='상권-추정매출', query={
             "bool": {
@@ -173,6 +186,8 @@ class GraphJSON(APIView):
                                         res2['hits']['hits'][0]['_source']['금요일_매출_금액'],
                                         res2['hits']['hits'][0]['_source']['토요일_매출_금액'],
                                         res2['hits']['hits'][0]['_source']['일요일_매출_금액']]
+            result["매출-요일별"]["max"] = result["매출-요일별"]["label"][
+                result["매출-요일별"]["data"].index(max(result["매출-요일별"]["data"]))]
 
             result["매출-시간대별"]["data"] = [res2['hits']['hits'][0]['_source']['시간대_00~06_매출_금액'],
                                          res2['hits']['hits'][0]['_source']['시간대_06~11_매출_금액'],
@@ -180,6 +195,8 @@ class GraphJSON(APIView):
                                          res2['hits']['hits'][0]['_source']['시간대_14~17_매출_금액'],
                                          res2['hits']['hits'][0]['_source']['시간대_17~21_매출_금액'],
                                          res2['hits']['hits'][0]['_source']['시간대_21~24_매출_금액']]
+            result["매출-시간대별"]["max"] = result["매출-시간대별"]["label"][
+                result["매출-시간대별"]["data"].index(max(result["매출-시간대별"]["data"]))]
 
             result["매출-연령대별"]["data"] = [res2['hits']['hits'][0]['_source']['연령대_10_매출_금액'],
                                         res2['hits']['hits'][0]['_source']['연령대_20_매출_금액'],
@@ -187,9 +204,14 @@ class GraphJSON(APIView):
                                         res2['hits']['hits'][0]['_source']['연령대_40_매출_금액'],
                                         res2['hits']['hits'][0]['_source']['연령대_50_매출_금액'],
                                         res2['hits']['hits'][0]['_source']['연령대_60_이상_매출_금액']]
+            result["매출-연령대별"]["max"] = result["매출-연령대별"]["label"][
+                result["매출-연령대별"]["data"].index(max(result["매출-연령대별"]["data"]))]
 
             result["매출-성별"]["data"] = [res2['hits']['hits'][0]['_source']['남성_매출_금액'],
                                        res2['hits']['hits'][0]['_source']['여성_매출_금액']]
+            result["매출-성별"]["max"] = result["매출-성별"]["label"][
+                result["매출-성별"]["data"].index(max(result["매출-성별"]["data"]))]
+
 
         # 인구
         res3 = es.search(index='상권-생활인구', query={
@@ -219,6 +241,8 @@ class GraphJSON(APIView):
 
             result["유동-성별"]["data"] = [res3['hits']['hits'][0]['_source']['남성_생활인구_수'],
                                        res3['hits']['hits'][0]['_source']['여성_생활인구_수']]
+            result["유동-성별"]["max"] = result["유동-성별"]["label"][
+                result["유동-성별"]["data"].index(max(result["유동-성별"]["data"]))]
 
             result["유동-연령대별"]["data"] = [res3['hits']['hits'][0]['_source']['연령대_10_생활인구_수'],
                                         res3['hits']['hits'][0]['_source']['연령대_20_생활인구_수'],
@@ -226,6 +250,8 @@ class GraphJSON(APIView):
                                         res3['hits']['hits'][0]['_source']['연령대_40_생활인구_수'],
                                         res3['hits']['hits'][0]['_source']['연령대_50_생활인구_수'],
                                         res3['hits']['hits'][0]['_source']['연령대_60_이상_생활인구_수']]
+            result["유동-연령대별"]["max"] = result["유동-연령대별"]["label"][
+                result["유동-연령대별"]["data"].index(max(result["유동-연령대별"]["data"]))]
 
             result["유동-요일별"]["data"] = [res3['hits']['hits'][0]['_source']['월요일_생활인구_수'],
                                         res3['hits']['hits'][0]['_source']['화요일_생활인구_수'],
@@ -234,6 +260,8 @@ class GraphJSON(APIView):
                                         res3['hits']['hits'][0]['_source']['금요일_생활인구_수'],
                                         res3['hits']['hits'][0]['_source']['토요일_생활인구_수'],
                                         res3['hits']['hits'][0]['_source']['일요일_생활인구_수']]
+            result["유동-요일별"]["max"] = result["유동-요일별"]["label"][
+                result["유동-요일별"]["data"].index(max(result["유동-요일별"]["data"]))]
 
             result["유동-시간대별"]["data"] = [res3['hits']['hits'][0]['_source']['시간대_1_생활인구_수'],
                                          res3['hits']['hits'][0]['_source']['시간대_2_생활인구_수'],
@@ -241,6 +269,8 @@ class GraphJSON(APIView):
                                          res3['hits']['hits'][0]['_source']['시간대_4_생활인구_수'],
                                          res3['hits']['hits'][0]['_source']['시간대_5_생활인구_수'],
                                          res3['hits']['hits'][0]['_source']['시간대_6_생활인구_수']]
+            result["유동-시간대별"]["max"] = result["유동-시간대별"]["label"][
+                result["유동-시간대별"]["data"].index(max(result["유동-시간대별"]["data"]))]
 
         res3 = es.search(index='상권-직장인구', query={
             "bool": {
@@ -273,6 +303,8 @@ class GraphJSON(APIView):
                                         res3['hits']['hits'][0]['_source']['연령대_40_직장_인구_수'],
                                         res3['hits']['hits'][0]['_source']['연령대_50_직장_인구_수'],
                                         res3['hits']['hits'][0]['_source']['연령대_60_이상_직장_인구_수']]
+            result["직장-연령대별"]["max"] = result["직장-연령대별"]["label"][
+                result["직장-연령대별"]["data"].index(max(result["직장-연령대별"]["data"]))]
 
         res3 = es.search(index='상권-상주인구', query={
             "bool": {
@@ -305,6 +337,8 @@ class GraphJSON(APIView):
                                         res3['hits']['hits'][0]['_source']['연령대 40 상주인구 수'],
                                         res3['hits']['hits'][0]['_source']['연령대 50 상주인구 수'],
                                         res3['hits']['hits'][0]['_source']['연령대 60 이상 상주인구 수']]
+            result["주거-연령대별"]["max"] = result["주거-연령대별"]["label"][
+                result["주거-연령대별"]["data"].index(max(result["주거-연령대별"]["data"]))]
 
         # 집객시설
         res4 = es.search(index='상권-집객시설', query={
