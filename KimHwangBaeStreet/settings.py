@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'elastic',
     'rest_framework',
     'corsheaders',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
