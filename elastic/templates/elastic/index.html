@@ -91,42 +91,59 @@
             <div class="reportexplain" >분기별 점포수</div>
             <canvas id="프랜차이즈" class="piechart" width="height:10vh; width:10vw" ></canvas>
                 <div class="reportexplain" >일반점포/프랜차이즈 </div>
+                <div class="max">일반점포와 프랜차이즈 중 <span id="maxStore"></span> 비율이 더 높아요!</div>
             <canvas id="개업수"  ></canvas>
                 <div class="reportexplain" >분기별 개업수 </div>
             <canvas id="폐업수"  ></canvas>
                 <div class="reportexplain" >분기별 폐업수 </div>
                 </div>
              <div class="reporttitle">매출 분석</div>
+
             <div class="chart">
             <canvas id="요일별매출"   ></canvas>
                 <div class="reportexplain" >요일별 매출 </div>
+                <div class="max"><span id="maxDay"></span> 매출이 가장 높아요!</div>
             <canvas id="시간대별매출" ></canvas>
                 <div class="reportexplain" >시간대별 매출 </div>
+                <div class="max"><span id="maxTime"></span>시 매출이 가장 높아요!</div>
             <canvas id="성별매출" class="piechart" width="height:10vh; width:10vw" ></canvas>
                 <div class="reportexplain" >성별 매출 </div>
+                <div class="max"><span id="maxSex"></span> 매출이 높아요!</div>
             <canvas id="연령대별매출"  ></canvas>
                 <div class="reportexplain" >연령대별 매출 </div>
+                <div class="max"><span id="maxAge"></span> 매출이 가장 높아요!</div>
             </div>
             <div class="reporttitle">인구 분석</div>
             <div class="chart">
             <canvas id="성별인구" class="piechart" width="height:10vh; width:10vw"></canvas>
                 <div class="reportexplain" >성별 유동인구 </div>
+                <div class="max"><span id="maxSexPeople"></span> 유동인구가 가장 많아요!</div>
             <canvas id="연령대인구"  ></canvas>
                 <div class="reportexplain" >연령대별 유동인구 </div>
+                <div class="max"><span id="maxAgePeople"></span> 유동인구가 가장 많아요!</div>
             <canvas id="요일인구"  ></canvas>
                 <div class="reportexplain" >요일별 유동인구 </div>
+                <div class="max"><span id="maxDayPeople"></span> 유동인구가 가장 많아요!</div>
             <canvas id="시간대인구"   ></canvas>
                 <div class="reportexplain" >시간대별 유동인구 </div>
 
-            <div class="reporttext">=>총 생활인구는 <span id="totalpopulation"></span>명 입니다. </div>
+            <div class="reporttext">총 생활인구는 <span id="totalpopulation"></span>명이고,
+            <div class="max"><span id="maxTimePeople"></span>시 유동인구가 가장 많아요!</div>
+            </div>
             <canvas id="연령대별상주인구"  ></canvas>
                 <div class="reportexplain" >연령대별 상주인구 </div>
-             <div class="reporttext">=>총 상주인구는 <span id="totaldwellingpopulation"></span>명 입니다. </div>
-            <canvas id="연령대별직장인구" class="charts"  ></canvas>
+
+
+             <div class="reporttext">총 상주인구는 <span id="totaldwellingpopulation"></span>명이고,
+                 <div class="max"><span id="maxAgeLive"></span> 상주인구가 가장 많아요!</div></div>
+                <canvas id="연령대별직장인구" class="charts"  ></canvas>
                 <div class="reportexplain" >연령대별 직장인구 </div>
 
+
              </div>
-             <div class="reporttext" id="reportend0">=>총 직장인구는 <span id="totalworkplacepopulation"></span>명 입니다.</div>
+             <div class="reporttext" id="reportend0">총 직장인구는 <span id="totalworkplacepopulation"></span>명이고,
+             <div class="max"><span id="maxAgeLive2"></span> 직장인구가 가장 많아요!</div>
+             </div>
              <div class="reporttitle" >주요시설, 집객시설 현황 </div>
             <div class="reporttext" id="reportend1">=>총 집객시설 수는 <span id="totalvisitorfacilities"></span>개 입니다.</div>
 
@@ -1142,6 +1159,31 @@ totalworkplacepopulation.innerHTML = res["직장-총"];
 
 var totalvisitorfacilities = document.getElementById('totalvisitorfacilities');
 totalvisitorfacilities.innerHTML = res["집객시설수"];
+
+var maxStore = document.getElementById('maxStore');
+maxStore.innerHTML = res["일반/프랜차이즈"].max;
+var maxDay = document.getElementById('maxDay');
+maxDay.innerHTML = res["매출-요일별"].max;
+var maxTime = document.getElementById('maxTime');
+maxTime.innerHTML = res["매출-시간대별"].max;
+var maxSex = document.getElementById('maxSex');
+maxSex.innerHTML = res["매출-성별"].max;
+var maxAge = document.getElementById('maxAge');
+maxAge.innerHTML = res["매출-연령대별"].max;
+
+var maxSexPeople = document.getElementById('maxSexPeople');
+maxSexPeople.innerHTML =res["유동-성별"].max;
+var maxAgePeople = document.getElementById('maxAgePeople');
+maxAgePeople.innerHTML =res["유동-연령대별"].max;
+var maxDayPeople = document.getElementById('maxDayPeople');
+maxDayPeople.innerHTML =res["유동-요일별"].max;
+var maxTimePeople = document.getElementById('maxTimePeople');
+maxTimePeople.innerHTML =res["유동-시간대별"].max;
+
+var maxAgeLive = document.getElementById('maxAgeLive');
+maxAgeLive.innerHTML =res["주거-연령대별"].max;
+var maxAgeLive2 = document.getElementById('maxAgeLive2');
+maxAgeLive2.innerHTML =res["직장-연령대별"].max;
 
 });}
 </script>
