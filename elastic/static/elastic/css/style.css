@@ -136,7 +136,7 @@
 .ResultReport{
     position :absolute ;
     overflow: auto;
-    left: 54%;
+    left: 55%;
     font-size:30px;
     width: 700px;
     height: 100%;
@@ -152,21 +152,20 @@
 }
 .reporttext{
     font-size:20px;
-
-    margin-right: 15%;
+    /*margin-right: 15%;*/
     margin-bottom: 3%;
 }
 
 .reporttitle{
 
     text-align: center;
-    font-size:28px;
+    font-size:26px;
     text-decoration: underline;
     text-decoration-style: solid;
     text-decoration-color: blue;
     text-decoration-thickness: 4px;
 
-    margin-bottom: 2%;
+    margin-top: 2px;
 
 }
 .chart-wrap{
@@ -196,9 +195,9 @@ hr {
 .piechart{
     margin-left: 20%;
 }
-#reportend0, #reportend1{
-    margin-left: 15%;
-}
+/*#reportend0, #reportend1{*/
+/*    margin-left: 15%;*/
+/*}*/
 
 .charts{
     width: 500px;
@@ -207,11 +206,11 @@ hr {
 }
 
 #ReportTitleBar{
-    text-align: center;
+    /*text-align: center;*/
     display: flex;
     background-color: rgb(184, 215, 228);
     /*justify-content: space-between;*/
-    font-size:24px;
+    font-size:22px;
     border: 10px solid #78b2c400;
 }
 
@@ -235,3 +234,8 @@ hr {
         /*border-color: #e0e0fd;*/
 
     }
+
+ .max{
+     font-size:16px;
+     margin-bottom: 2%;
+ }
