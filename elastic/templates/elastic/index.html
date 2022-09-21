@@ -12,7 +12,9 @@
 </head>
 <body>
 <div id="title">
-<img id="logo" src="{% static 'elastic/image/logogo.png' %}">김황배의 골목식당</div>
+<img id="logo" src="{% static 'elastic/image/logogo.png' %}">
+<div id="title1">김황배의 골목식당</div>
+</div>
 
  <div class="map_wrap" >
     <div id="menu_wrap" class="bg_white">
@@ -51,7 +53,7 @@
     </section>
 
         <div class="clickreport">
-        <button onclick="clickReport(); showReportHead()" id="report">분석하기</button>
+        <button  onclick="clickReport(); showReportHead();" id="report" disabled>분석하기</button>
         <button id="reload" >새로고침</button>
     </div>
 </div>
@@ -127,26 +129,27 @@
             <canvas id="시간대인구"   ></canvas>
                 <div class="reportexplain" >시간대별 유동인구 </div>
 
-            <div class="reporttext">총 생활인구는 <span id="totalpopulation"></span>명이고,
-            <div class="max"><span id="maxTimePeople"></span>시 유동인구가 가장 많아요!</div>
+            <div class="max">총 생활인구는 <span id="totalpopulation"></span>명이고,
+            <div><span id="maxTimePeople"></span>시 유동인구가 가장 많아요!</div>
             </div>
             <canvas id="연령대별상주인구"  ></canvas>
                 <div class="reportexplain" >연령대별 상주인구 </div>
 
 
-             <div class="reporttext">총 상주인구는 <span id="totaldwellingpopulation"></span>명이고,
-                 <div class="max"><span id="maxAgeLive"></span> 상주인구가 가장 많아요!</div></div>
+             <div class="max">총 상주인구는 <span id="totaldwellingpopulation"></span>명이고,
+                 <div><span id="maxAgeLive"></span> 상주인구가 가장 많아요!</div></div>
                 <canvas id="연령대별직장인구" class="charts"  ></canvas>
                 <div class="reportexplain" >연령대별 직장인구 </div>
 
 
              </div>
-             <div class="reporttext" id="reportend0">총 직장인구는 <span id="totalworkplacepopulation"></span>명이고,
-             <div class="max"><span id="maxAgeLive2"></span> 직장인구가 가장 많아요!</div>
+            <div class="chart">
+             <div class="max" >총 직장인구는 <span id="totalworkplacepopulation"></span>명이고,
+             <div><span id="maxAgeLive2"></span> 직장인구가 가장 많아요!</div>
              </div>
              <div class="reporttitle" >주요시설, 집객시설 현황 </div>
-            <div class="reporttext" id="reportend1">=>총 집객시설 수는 <span id="totalvisitorfacilities"></span>개 입니다.</div>
-
+            <div class="reporttext" id="reportend1">총 집객시설 수는 <span id="totalvisitorfacilities"></span>개 입니다.</div>
+            </div>
             </div>
     </div>
 </div>
@@ -162,7 +165,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 <script type="text/javascript" src="/static/elastic/js/gudata.js"></script>
 <script>
-
+let flag = 0; //버튼 클릭 제어 하려고 눌러야 무조건 분석하기 눌리게
     $(document).ready(function(){
     $("#searchInput").autocomplete({  //오토 컴플릿트 시작
          source: List,   // source는 gudata.js파일 내부의 List 배열
@@ -177,12 +180,15 @@
 var servicecode2 = document.getElementsByClassName("servicecode");
 
 function handleClick(event) {
+
   console.log(event.target);
   // console.log(this);
   // 콘솔창을 보면 둘다 동일한 값이 나온다
 
   console.log(event.target.classList);
-
+    flag = 1;
+    console.log(flag);
+      btnActive();
   if (event.target.classList[1] === "clicked") {
     event.target.classList.remove("clicked");
   } else {
@@ -195,13 +201,21 @@ function handleClick(event) {
 }
 
 function init() {
+
   for (var i = 0; i < servicecode2.length; i++) {
     servicecode2[i].addEventListener("click", handleClick);
   }
+
 }
 
 init();
-
+//분석하기 버튼 활성화 함수
+function btnActive()  {
+  const target = document.getElementById('report');
+  if (flag==1) {
+      target.disabled = false;
+  }
+}
 var Target = document.getElementById("clock");
         function clock() {
             var time = new Date();
@@ -312,21 +326,14 @@ function showCommercialAreaName(CommercialAreaName){
 
     }
 
-    {#let service ;#}
-    {#$(document).ready(function() {#}
-    {# $('.servicecode').on("click", function() {     //버튼 클릭시 호출되는 함수#}
-    {#       $(this).addClass('active');      //클릭된 버튼에 속성(class 추가)#}
-    {#       $(this).attr("disabled", true);#}
-    {#       service=($(this).val());//클릭된 버튼의 value 값#}
-    {#       $('.selectedArea').after(service);#}
-    {# });#}
+
 
       $('#reload').on("click",function(){
         location.reload();
         window.location = "http://127.0.0.1:8000/index/";
 
     })
-    $('.clickreport').attr("disabled", true);
+    {#$('.clickreport').attr("disabled", true);#}
 
 
 // 커스텀 오버레이에 표시할 내용입니다
