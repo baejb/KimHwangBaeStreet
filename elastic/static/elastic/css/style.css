@@ -164,7 +164,7 @@
     text-decoration-style: solid;
     text-decoration-color: blue;
     text-decoration-thickness: 4px;
-
+    margin-bottom: 2%;
     margin-top: 2px;
 
 }
@@ -184,7 +184,7 @@ hr {
 }
 .reportexplain{
     font-size:18px;
-    margin-bottom: 7%;
+    margin-bottom: 5%;
 
 }
 .chart{
@@ -223,19 +223,27 @@ hr {
     font-size:30px;
 }
 #logo{
-    width:180px;
-    height:80px;
+    width:160px;
+    height:70px;
 }
  #title{
+     display: flex;
         background-color: rgb(243, 239, 210);
-        font-size: 32px;
+        padding-left:40px ;
+        font-size: 20px;
         /*text-align: center;*/
-        /*border-style: solid;*/
-        /*border-color: #e0e0fd;*/
+        border-style: solid;
+        border-color: #fdf59a;
 
     }
-
+#title1{
+    font-style:italic;
+    font-size:35px;
+    padding-top:15px;
+}
  .max{
      font-size:16px;
-     margin-bottom: 2%;
+     margin-bottom: 15%;
+     border: 2px solid #888bfa;
+     padding: 20px;
  }
